@@ -1,0 +1,4 @@
+.hidden-tab-pane .tab-header-area {
+    -fx-max-height: 0;
+    -fx-pref-height: 0;
+}
