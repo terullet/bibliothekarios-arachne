@@ -2,7 +2,8 @@ package net.terullet.bibliothekarios.arachne;
 
 import java.util.List;
 
-public class WorkUniverse {
-	private String name;
-	private List<Work> works;
+public interface WorkUniverse {
+	String getName();
+	void setName(String name);
+	List<Work> getWorks();
 }

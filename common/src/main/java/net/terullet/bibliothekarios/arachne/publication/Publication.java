@@ -1,6 +1,12 @@
 package net.terullet.bibliothekarios.arachne.publication;
 
-public class Publication {
-	private String title;
-	private String isbn;
+import java.time.LocalDate;
+
+public interface Publication {
+	String getTitle();
+	void setTitle(String title);
+	String getIsbn();
+	void setIsbn(String isbn);
+	LocalDate getPublishedAt();
+	void setPublishedAt(LocalDate publishedAt);
 }
