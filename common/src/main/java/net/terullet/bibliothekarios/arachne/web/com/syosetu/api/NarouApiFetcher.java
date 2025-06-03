@@ -53,27 +53,24 @@ public class NarouApiFetcher {
 	public static final long DELAY = 2500L;
 	private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory("NarouApiFetcher"));
 	private ScheduledFuture<?> executorFuture;
-	private final Object executorSyncObj = new Object();
 	private final Queue<QueueItem> queue = new PriorityQueue<>(8, QueueItem.COMPARATOR);
-	private final Object queueSyncObj = new Object();
+	private final Object syncObj = new Object();
 	private final AtomicLong queueIdGenerator = new AtomicLong(0L);
 
 	private void execute() {
 		QueueItem item;
-		synchronized (this.queueSyncObj) {
+		synchronized (this.syncObj) {
 			// get item from queue.
 			item = this.queue.poll();
-		}
-		if (item == null) {
-			// if queue is empty, then stop service.
-			synchronized (this.executorSyncObj) {
+			if (item == null) {
+				// if queue is empty, then stop service.
 				if (this.executorFuture != null) {
 					this.executorFuture.cancel(false);
 					this.executorFuture = null;
 					logger.info("Stopped executor.");
 				}
+				return;
 			}
-			return;
 		}
 
 		// send request and back response.
@@ -93,11 +90,9 @@ public class NarouApiFetcher {
 	public CompletionStage<Pair<NarouApiQuery, InputStream>> fetch(NarouApiQuery query, RequestSource requestSource, RequestStatus requestStatus) {
 		CompletableFuture<Pair<NarouApiQuery, InputStream>> completableFuture = new CompletableFuture<>();
 		// add query to queue.
-		synchronized (this.queueSyncObj) {
+		synchronized (this.syncObj) {
 			this.queue.offer(new QueueItem(this.queueIdGenerator.incrementAndGet(), query, requestSource, requestStatus, completableFuture));
-		}
-		// activate executor if it is stopped.
-		synchronized (this.executorSyncObj) {
+			// activate executor if it is stopped.
 			if (this.executorFuture == null || this.executorFuture.isDone()) {
 				this.executorFuture = this.executor.scheduleAtFixedRate(this::execute, 0L, DELAY, TimeUnit.MILLISECONDS);
 				logger.info("Activated executor.");
