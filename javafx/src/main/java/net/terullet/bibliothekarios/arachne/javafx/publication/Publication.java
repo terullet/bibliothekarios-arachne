@@ -4,13 +4,25 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import net.terullet.bibliothekarios.arachne.Work;
 
 import java.time.LocalDate;
 
 public class Publication implements net.terullet.bibliothekarios.arachne.publication.Publication {
+	private final ObjectProperty<Work> workProperty = new SimpleObjectProperty<>();
 	private final StringProperty titleProperty = new SimpleStringProperty();
 	private final StringProperty isbnProperty = new SimpleStringProperty();
 	private final ObjectProperty<LocalDate> publishedAtProperty = new SimpleObjectProperty<>();
+
+	public ObjectProperty<Work> workProperty() {
+		return this.workProperty;
+	}
+	public Work getWork() {
+		return this.workProperty.get();
+	}
+	public void setWork(Work work) {
+		this.workProperty.set(work);
+	}
 
 	public StringProperty titleProperty() {
 		return this.titleProperty;
