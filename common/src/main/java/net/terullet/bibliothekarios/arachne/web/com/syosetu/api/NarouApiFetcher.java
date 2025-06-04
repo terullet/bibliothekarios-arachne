@@ -18,7 +18,7 @@ import java.util.Queue;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class NarouApiFetcher {
+class NarouApiFetcher {
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 	private static volatile NarouApiFetcher instance;
 	public static void initialize(HttpClient httpClient) {
@@ -80,15 +80,15 @@ public class NarouApiFetcher {
 		try {
 			httpResponse = this.httpClient.send(request, HttpResponse.BodyHandlers.ofInputStream());
 			logger.trace(httpResponse.headers());
-			item.completableFuture().complete(new Pair<>(query, httpResponse.body()));
+			item.completableFuture().complete(new Pair<>(query, httpResponse));
 		} catch (IOException | InterruptedException e) {
 			logger.warn(e);
 			item.completableFuture().completeExceptionally(e);
 		}
 	}
 
-	public CompletionStage<Pair<NarouApiQuery, InputStream>> fetch(NarouApiQuery query, RequestSource requestSource, RequestStatus requestStatus) {
-		CompletableFuture<Pair<NarouApiQuery, InputStream>> completableFuture = new CompletableFuture<>();
+	CompletionStage<Pair<NarouApiQuery, HttpResponse<InputStream>>> fetch(NarouApiQuery query, RequestSource requestSource, RequestStatus requestStatus) {
+		CompletableFuture<Pair<NarouApiQuery, HttpResponse<InputStream>>> completableFuture = new CompletableFuture<>();
 		// add query to queue.
 		synchronized (this.syncObj) {
 			this.queue.offer(new QueueItem(this.queueIdGenerator.incrementAndGet(), query, requestSource, requestStatus, completableFuture));
@@ -109,7 +109,7 @@ public class NarouApiFetcher {
 	 * @param requestStatus why is this request generated.
 	 * @param completableFuture where to back response.
 	 */
-	private record QueueItem(long queryId, NarouApiQuery query, RequestSource requestSource, RequestStatus requestStatus, CompletableFuture<Pair<NarouApiQuery, InputStream>> completableFuture) {
+	private record QueueItem(long queryId, NarouApiQuery query, RequestSource requestSource, RequestStatus requestStatus, CompletableFuture<Pair<NarouApiQuery, HttpResponse<InputStream>>> completableFuture) {
 		public static final Comparator<QueueItem> COMPARATOR = Comparator
 				.comparing(QueueItem::requestSource)
 				.thenComparing(QueueItem::requestStatus)
