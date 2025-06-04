@@ -62,10 +62,10 @@ class NarouNcodeFetcher {
 	private final AtomicLong queueIdGenerator = new AtomicLong(0L);
 	private int consecutiveAccessCount = 0;
 
-	public CompletionStage<Boolean> login(String userid, String password, boolean enableAutoLogin) {
+	public CompletionStage<Boolean> loginAsync(String userid, String password, boolean enablesAutoLogin) {
 		HttpRequest loginRequest = HttpRequest.newBuilder(URI.create("https://syosetu.com/login/login"))
 						.header("Content-Type", "application/x-www-form-urlencoded")
-						.POST(HttpRequest.BodyPublishers.ofString("narouid=" + userid + "&pass=" + password + "&skip=" + (enableAutoLogin ? '1' : '0')))
+						.POST(HttpRequest.BodyPublishers.ofString("narouid=" + userid + "&pass=" + password + "&skip=" + (enablesAutoLogin ? '1' : '0')))
 						.build();
 
 		CompletionStage<HttpResponse<String>> loginResponse = this.httpClient.sendAsync(loginRequest, HttpResponse.BodyHandlers.ofString());
@@ -87,7 +87,7 @@ class NarouNcodeFetcher {
 
 	private void execute() {
 		// get task.
-		QueueItem item = null;
+		QueueItem item;
 		synchronized (this.syncObj) {
 			item = queue.poll();
 			if (item == null) {
@@ -100,6 +100,7 @@ class NarouNcodeFetcher {
 		}
 
 		// generate httpRequest.
+		// TODO: use gzip
 		HttpRequest  httpRequest;
 		switch (item) {
 			case WorkQueueItem wqi:
@@ -145,7 +146,7 @@ class NarouNcodeFetcher {
 		}
 	}
 
-	CompletionStage<WorkResponse> fetch(NarouWork work, int pageNumber, RequestSource requestSource, RequestStatus requestStatus) {
+	CompletableFuture<WorkResponse> fetchAsync(NarouWork work, int pageNumber, RequestSource requestSource, RequestStatus requestStatus) {
 		CompletableFuture<WorkResponse> completableFuture = new CompletableFuture<>();
 		synchronized (this.syncObj) {
 			this.queue.offer(new WorkQueueItem(this.queueIdGenerator.incrementAndGet(), work, pageNumber, requestSource, requestStatus, completableFuture));
@@ -154,7 +155,7 @@ class NarouNcodeFetcher {
 		return completableFuture;
 	}
 
-	CompletionStage<EpisodeResponse> fetch(NarouEpisodeMetadata episode, RequestSource requestSource, RequestStatus requestStatus) {
+	CompletableFuture<EpisodeResponse> fetchAsync(NarouEpisodeMetadata episode, RequestSource requestSource, RequestStatus requestStatus) {
 		CompletableFuture<EpisodeResponse> completableFuture = new CompletableFuture<>();
 		synchronized (this.syncObj) {
 			this.queue.offer(new EpisodeQueueItem(this.queueIdGenerator.incrementAndGet(), episode, requestSource, requestStatus, completableFuture));
@@ -175,7 +176,7 @@ class NarouNcodeFetcher {
 	sealed interface Response permits WorkResponse, EpisodeResponse {
 		HttpResponse<InputStream> httpResponse();
 	}
-	record WorkResponse(NarouWork work, int pageNumber, HttpResponse<InputStream> httpResponse) implements Response { }
+	record WorkResponse(NarouWork work, RequestSource requestSource, int pageNumber, HttpResponse<InputStream> httpResponse) implements Response { }
 	record EpisodeResponse(NarouEpisodeMetadata episode, HttpResponse<InputStream> httpResponse) implements Response { }
 
 	private sealed interface QueueItem permits WorkQueueItem, EpisodeQueueItem {
@@ -200,7 +201,7 @@ class NarouNcodeFetcher {
 	}
 	private record WorkQueueItem(long id, NarouWork work, int pageNumber, RequestSource requestSource, RequestStatus requestStatus, CompletableFuture<WorkResponse> completableFuture) implements QueueItem {
 		public boolean complete(HttpResponse<InputStream> httpResponse) {
-			return this.completableFuture.complete(new WorkResponse(this.work, this.pageNumber, httpResponse));
+			return this.completableFuture.complete(new WorkResponse(this.work, this.requestSource, this.pageNumber, httpResponse));
 		}
 		public boolean completeExceptionally(Throwable ex) {
 			return this.completableFuture.completeExceptionally(ex);
