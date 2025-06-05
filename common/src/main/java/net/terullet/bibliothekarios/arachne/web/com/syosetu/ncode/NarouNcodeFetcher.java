@@ -15,6 +15,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -64,9 +65,10 @@ class NarouNcodeFetcher {
 
 	public CompletionStage<Boolean> loginAsync(String userid, String password, boolean enablesAutoLogin) {
 		HttpRequest loginRequest = HttpRequest.newBuilder(URI.create("https://syosetu.com/login/login"))
-						.header("Content-Type", "application/x-www-form-urlencoded")
-						.POST(HttpRequest.BodyPublishers.ofString("narouid=" + userid + "&pass=" + password + "&skip=" + (enablesAutoLogin ? '1' : '0')))
-						.build();
+				.header("Content-Type", "application/x-www-form-urlencoded")
+				.header("Accept-Encoding", String.join(", ", Arrays.stream(Encoding.values()).map(Encoding::getKey).toList()))
+				.POST(HttpRequest.BodyPublishers.ofString("narouid=" + userid + "&pass=" + password + "&skip=" + (enablesAutoLogin ? '1' : '0')))
+				.build();
 
 		CompletionStage<HttpResponse<String>> loginResponse = this.httpClient.sendAsync(loginRequest, HttpResponse.BodyHandlers.ofString());
 

@@ -19,10 +19,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.DeflaterInputStream;
+import java.util.zip.GZIPInputStream;
 
 class NarouNcodeParser {
 	private static final Logger logger = LogManager.getLogger(new Throwable().getStackTrace()[0].getClassName());
 
+	private InputStream decompressInputStream(HttpResponse<InputStream> httpResponse) throws IOException {
+		return switch (Encoding.fromKey(httpResponse.headers().firstValue("Content-Encoding").orElse(""))) {
+			case GZIP -> new GZIPInputStream(new BufferedInputStream(httpResponse.body()));
+			case DEFLATE -> new DeflaterInputStream(new BufferedInputStream(httpResponse.body()));
+			case null -> new BufferedInputStream(httpResponse.body());
+		};
+	}
 	private Document parseToDocument(HttpResponse<InputStream> httpResponse) throws IOException {
 		String charset = "utf-8";
 		for (String c : httpResponse.headers().map().get("Content-Type")) {
@@ -31,7 +40,7 @@ class NarouNcodeParser {
 				charset = m.group("charset");
 			}
 		}
-		return Jsoup.parse(httpResponse.body(), charset, httpResponse.request().uri().toString());
+		return Jsoup.parse(decompressInputStream(httpResponse), charset, httpResponse.request().uri().toString());
 	}
 
 	private static final Pattern CONTENT_TYPE_CHARSET_PATTERN = Pattern.compile("charset=(?<charset>\\S+)");
@@ -133,13 +142,10 @@ class NarouNcodeParser {
 
 	List<String> extractToParagraphs(NarouNcodeFetcher.EpisodeResponse response) {
 		this.detectErrors(response);
-		return this.extractFromText(response.httpResponse().body());
-	}
-	private List<String> extractFromText(InputStream is) {
 		BufferedReader br = null;
 		List<String> paragraphs = new LinkedList<>();
 		try {
-			br = new BufferedReader(new InputStreamReader(new BufferedInputStream(is), StandardCharsets.UTF_8));
+			br = new BufferedReader(new InputStreamReader(decompressInputStream(response.httpResponse()), StandardCharsets.UTF_8));
 			String str;
 			while ((str = br.readLine()) != null) {
 				paragraphs.add(str);
