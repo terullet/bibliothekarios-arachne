@@ -3,10 +3,10 @@ package net.terullet.bibliothekarios.arachne.web.com.syosetu.api;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import net.terullet.bibliothekarios.arachne.web.com.syosetu.NarouR18Genre;
 
-public final class NarouR18WorkMetadata extends NarouWorkMetadata {
+public final class NarouR18WorkResponseMetadata extends NarouWorkResponseMetadata {
 	private final NarouR18Genre genre;
 
-	public NarouR18WorkMetadata(
+	public NarouR18WorkResponseMetadata(
 			@JsonProperty("ncode") String ncode,
 			@JsonProperty("title") String title,
 			@JsonProperty("userid") long writerId,

@@ -1,6 +1,6 @@
 package net.terullet.bibliothekarios.arachne.web.com.syosetu.ncode;
 
-import net.terullet.bibliothekarios.arachne.web.com.syosetu.NarouEpisodeMetadata;
+import net.terullet.bibliothekarios.arachne.web.com.syosetu.NarouEpisode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -106,7 +106,7 @@ class NarouNcodeParser {
 					if (!postedAtMatcher.find()) {
 						throw new RuntimeException("Failed to parse when the episode is posted.");
 					}
-					ZonedDateTime postedAt = ZonedDateTime.of(LocalDateTime.parse(postedAtMatcher.group("date") + " " + postedAtMatcher.group("time"), NarouEpisodeMetadata.NAROU_EPISODE_DATETIME_FORMAT), ZoneOffset.ofHours(9));
+					ZonedDateTime postedAt = ZonedDateTime.of(LocalDateTime.parse(postedAtMatcher.group("date") + " " + postedAtMatcher.group("time"), NarouEpisode.NAROU_EPISODE_DATETIME_FORMAT), ZoneOffset.ofHours(9));
 					ZonedDateTime lastUpdatedAt = null;
 					Elements tues = timeElement.getElementsByTag("span");
 					if (!tues.isEmpty()) {
@@ -114,7 +114,7 @@ class NarouNcodeParser {
 						if (!lastModifiedAtMatcher.find()) {
 							throw new RuntimeException("Failed to parse when the episode is updated.");
 						}
-						lastUpdatedAt = ZonedDateTime.of(LocalDateTime.parse(lastModifiedAtMatcher.group("date") + " " + lastModifiedAtMatcher.group("time"), NarouEpisodeMetadata.NAROU_EPISODE_DATETIME_FORMAT), ZoneOffset.ofHours(9));
+						lastUpdatedAt = ZonedDateTime.of(LocalDateTime.parse(lastModifiedAtMatcher.group("date") + " " + lastModifiedAtMatcher.group("time"), NarouEpisode.NAROU_EPISODE_DATETIME_FORMAT), ZoneOffset.ofHours(9));
 					}
 					episodes.add(new NarouEpisodeResponseMetadata(response.work(), episodeNumber, titleElement.ownText(), postedAt, lastUpdatedAt));
 					break;

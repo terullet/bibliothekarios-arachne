@@ -2,13 +2,16 @@ package net.terullet.bibliothekarios.arachne.web.com.syosetu.ncode;
 
 import net.terullet.bibliothekarios.arachne.RequestSource;
 import net.terullet.bibliothekarios.arachne.RequestStatus;
-import net.terullet.bibliothekarios.arachne.web.com.syosetu.NarouEpisodeMetadata;
+import net.terullet.bibliothekarios.arachne.web.com.syosetu.NarouEpisode;
 import net.terullet.bibliothekarios.arachne.web.com.syosetu.NarouWork;
 import net.terullet.util.concurrent.NamedThreadFactory;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.*;
 
 public class NarouNcodeManager {
@@ -34,7 +37,7 @@ public class NarouNcodeManager {
 		return wfp.targetCompletableFuture;
 	}
 
-	public CompletionStage<List<String>> fetchEpisodeContentAsync(NarouEpisodeMetadata episode, RequestSource requestSource) {
+	public CompletionStage<List<String>> fetchEpisodeContentAsync(NarouEpisode episode, RequestSource requestSource) {
 		// TODO: retry.
 		return this.fetcher.fetchAsync(episode, requestSource, RequestStatus.ORIGINAL).thenApplyAsync(this.parser::extractToParagraphs, executor);
 	}

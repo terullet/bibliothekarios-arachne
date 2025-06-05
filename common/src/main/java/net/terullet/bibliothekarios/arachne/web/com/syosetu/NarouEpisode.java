@@ -3,7 +3,7 @@ package net.terullet.bibliothekarios.arachne.web.com.syosetu;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-public interface NarouEpisodeMetadata {
+public interface NarouEpisode {
 	NarouWork getWork();
 	int getEpisodeNumber();
 	String getTitle();

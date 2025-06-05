@@ -2,19 +2,11 @@ package net.terullet.bibliothekarios.arachne.web.com.syosetu.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import net.terullet.bibliothekarios.arachne.web.com.syosetu.NarouAllAgesGenre;
-import net.terullet.bibliothekarios.arachne.web.com.syosetu.NarouWorkType;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-
-public final class NarouAllAgesWorkMetadata extends NarouWorkMetadata {
+public final class NarouAllAgesWorkResponseMetadata extends NarouWorkResponseMetadata {
 	private final NarouAllAgesGenre genre;
 
-	public NarouAllAgesWorkMetadata(
+	public NarouAllAgesWorkResponseMetadata(
 					@JsonProperty("ncode") String ncode,
 					@JsonProperty("title") String title,
 					@JsonProperty("userid") long writerId,

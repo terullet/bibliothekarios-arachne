@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract sealed class NarouWorkMetadata permits NarouAllAgesWorkMetadata, NarouR18WorkMetadata {
+public abstract sealed class NarouWorkResponseMetadata permits NarouAllAgesWorkResponseMetadata, NarouR18WorkResponseMetadata {
 	private final String ncode;
 	private final String title;
 	private final long writerId;
@@ -41,7 +41,7 @@ public abstract sealed class NarouWorkMetadata permits NarouAllAgesWorkMetadata,
 	public static final DateTimeFormatter NAROU_WORK_DATETIME_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 	public static final ZoneId NAROU_TIMEZONE = ZoneId.of("Asia/Tokyo");
 
-	public NarouWorkMetadata(
+	public NarouWorkResponseMetadata(
 			@JsonProperty("ncode") String ncode,
 			@JsonProperty("title") String title,
 			@JsonProperty("userid") long writerId,

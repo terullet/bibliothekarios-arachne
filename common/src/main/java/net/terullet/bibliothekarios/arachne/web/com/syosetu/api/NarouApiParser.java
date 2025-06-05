@@ -36,7 +36,7 @@ class NarouApiParser {
 		throw new RuntimeException("Unexpected StatusCode(" + httpResponse.statusCode() + ") received.");
 	}
 
-	List<? extends NarouWorkMetadata> parse(Pair<NarouApiQuery, HttpResponse<InputStream>> response) {
+	List<? extends NarouWorkResponseMetadata> parse(Pair<NarouApiQuery, HttpResponse<InputStream>> response) {
 		// check errors.
 		this.detectErrors(response);
 		// parse json response.
@@ -68,9 +68,9 @@ class NarouApiParser {
 		try {
 			return switch (response.getKey()) {
 				case NarouAllAgesApiQuery aaq ->
-						this.objectMapper.readValue(arrayNode.traverse(), new TypeReference<List<NarouAllAgesWorkMetadata>>() { });
+						this.objectMapper.readValue(arrayNode.traverse(), new TypeReference<List<NarouAllAgesWorkResponseMetadata>>() { });
 				case NarouR18ApiQuery r18q ->
-						this.objectMapper.readValue(arrayNode.traverse(), new TypeReference<List<NarouR18WorkMetadata>>() { });
+						this.objectMapper.readValue(arrayNode.traverse(), new TypeReference<List<NarouR18WorkResponseMetadata>>() { });
 			};
 		} catch (IOException e) {
 			throw new RuntimeException(e);

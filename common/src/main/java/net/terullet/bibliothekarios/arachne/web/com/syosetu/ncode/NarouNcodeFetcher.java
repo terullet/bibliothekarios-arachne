@@ -2,7 +2,7 @@ package net.terullet.bibliothekarios.arachne.web.com.syosetu.ncode;
 
 import net.terullet.bibliothekarios.arachne.RequestSource;
 import net.terullet.bibliothekarios.arachne.RequestStatus;
-import net.terullet.bibliothekarios.arachne.web.com.syosetu.NarouEpisodeMetadata;
+import net.terullet.bibliothekarios.arachne.web.com.syosetu.NarouEpisode;
 import net.terullet.bibliothekarios.arachne.web.com.syosetu.NarouR18Work;
 import net.terullet.bibliothekarios.arachne.web.com.syosetu.NarouWork;
 import net.terullet.bibliothekarios.arachne.web.com.syosetu.NarouWorkType;
@@ -157,7 +157,7 @@ class NarouNcodeFetcher {
 		return completableFuture;
 	}
 
-	CompletableFuture<EpisodeResponse> fetchAsync(NarouEpisodeMetadata episode, RequestSource requestSource, RequestStatus requestStatus) {
+	CompletableFuture<EpisodeResponse> fetchAsync(NarouEpisode episode, RequestSource requestSource, RequestStatus requestStatus) {
 		CompletableFuture<EpisodeResponse> completableFuture = new CompletableFuture<>();
 		synchronized (this.syncObj) {
 			this.queue.offer(new EpisodeQueueItem(this.queueIdGenerator.incrementAndGet(), episode, requestSource, requestStatus, completableFuture));
@@ -179,7 +179,7 @@ class NarouNcodeFetcher {
 		HttpResponse<InputStream> httpResponse();
 	}
 	record WorkResponse(NarouWork work, RequestSource requestSource, int pageNumber, HttpResponse<InputStream> httpResponse) implements Response { }
-	record EpisodeResponse(NarouEpisodeMetadata episode, HttpResponse<InputStream> httpResponse) implements Response { }
+	record EpisodeResponse(NarouEpisode episode, HttpResponse<InputStream> httpResponse) implements Response { }
 
 	private sealed interface QueueItem permits WorkQueueItem, EpisodeQueueItem {
 		long id();
@@ -209,7 +209,7 @@ class NarouNcodeFetcher {
 			return this.completableFuture.completeExceptionally(ex);
 		}
 	}
-	private record EpisodeQueueItem(long id, NarouEpisodeMetadata episode, RequestSource requestSource, RequestStatus requestStatus, CompletableFuture<EpisodeResponse> completableFuture) implements QueueItem {
+	private record EpisodeQueueItem(long id, NarouEpisode episode, RequestSource requestSource, RequestStatus requestStatus, CompletableFuture<EpisodeResponse> completableFuture) implements QueueItem {
 		public boolean complete(HttpResponse<InputStream> httpResponse) {
 			return this.completableFuture.complete(new EpisodeResponse(this.episode, httpResponse));
 		}

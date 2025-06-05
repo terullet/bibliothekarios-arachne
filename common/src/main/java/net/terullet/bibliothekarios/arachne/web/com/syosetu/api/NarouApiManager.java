@@ -20,7 +20,7 @@ public class NarouApiManager {
 		this.parser = new NarouApiParser();
 	}
 
-	public CompletionStage<List<? extends NarouWorkMetadata>> fetch(NarouApiQuery query, RequestSource requestSource, RequestStatus requestStatus) {
+	public CompletionStage<List<? extends NarouWorkResponseMetadata>> fetch(NarouApiQuery query, RequestSource requestSource, RequestStatus requestStatus) {
 		return this.fetcher.fetch(query, requestSource, requestStatus)
 				.thenApplyAsync(this.parser::parse, NarouApiParser.EXECUTOR);
 	}
