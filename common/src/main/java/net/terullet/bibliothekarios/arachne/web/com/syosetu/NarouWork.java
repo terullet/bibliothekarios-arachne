@@ -4,6 +4,6 @@ import net.terullet.bibliothekarios.arachne.web.WebWork;
 
 public interface NarouWork extends WebWork {
 	String getNcode();
-	long getId();
+	long getNarouId();
 	NarouWorkType getWorkType();
 }

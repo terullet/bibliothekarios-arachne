@@ -116,9 +116,9 @@ class NarouNcodeFetcher {
 					default -> "lf";
 				};
 				if (eqi.episode().getWork().getWorkType() == NarouWorkType.STANDALONE) {
-					httpRequest = HttpRequest.newBuilder(URI.create(hostname + eqi.episode().getWork().getId() + "/?hankaku=0&code=utf-8&kaigyo=" + ls)).build();
+					httpRequest = HttpRequest.newBuilder(URI.create(hostname + eqi.episode().getWork().getNarouId() + "/?hankaku=0&code=utf-8&kaigyo=" + ls)).build();
 				} else {
-					httpRequest = HttpRequest.newBuilder(URI.create(hostname + eqi.episode().getWork().getId() + "/?no=" + eqi.episode().getEpisodeNumber() + "&hankaku=~&code=utf-8&kaigyo=" + ls)).build();
+					httpRequest = HttpRequest.newBuilder(URI.create(hostname + eqi.episode().getWork().getNarouId() + "/?no=" + eqi.episode().getEpisodeNumber() + "&hankaku=~&code=utf-8&kaigyo=" + ls)).build();
 				}
 				break;
 		}
