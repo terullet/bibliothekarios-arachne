@@ -1,8 +1,8 @@
 package net.terullet.bibliothekarios.arachne;
 
-public interface Work {
+public interface Series {
 	long getId();
-	Series getSeries();
+	Universe getWorkUniverse();
 	String getTitle();
 	void setTitle(String title);
 }

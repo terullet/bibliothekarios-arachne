@@ -1,27 +1,32 @@
-package net.terullet.bibliothekarios.arachne.javafx.publication;
+package net.terullet.bibliothekarios.arachne.javafx.book;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import net.terullet.bibliothekarios.arachne.Work;
+import net.terullet.bibliothekarios.arachne.Series;
 
 import java.time.LocalDate;
 
-public class Publication implements net.terullet.bibliothekarios.arachne.publication.Publication {
-	private final ObjectProperty<Work> workProperty = new SimpleObjectProperty<>();
+public class PrintedBook implements net.terullet.bibliothekarios.arachne.book.PrintedBook {
+	private final long id;
+	private final ObjectProperty<Series> seriesProperty = new SimpleObjectProperty<>();
 	private final StringProperty titleProperty = new SimpleStringProperty();
 	private final StringProperty isbnProperty = new SimpleStringProperty();
 	private final ObjectProperty<LocalDate> publishedAtProperty = new SimpleObjectProperty<>();
 
-	public ObjectProperty<Work> workProperty() {
-		return this.workProperty;
+	public long getId() {
+		return this.id;
 	}
-	public Work getWork() {
-		return this.workProperty.get();
+
+	public ObjectProperty<Series> seriesProperty() {
+		return this.seriesProperty;
 	}
-	public void setWork(Work work) {
-		this.workProperty.set(work);
+	public Series getSeries() {
+		return this.seriesProperty.get();
+	}
+	public void setWork(Series series) {
+		this.seriesProperty.set(series);
 	}
 
 	public StringProperty titleProperty() {
@@ -52,5 +57,9 @@ public class Publication implements net.terullet.bibliothekarios.arachne.publica
 	}
 	public void setPublishedAt(LocalDate publishedAt) {
 		this.publishedAtProperty.set(publishedAt);
+	}
+
+	public PrintedBook(long id) {
+		this.id = id;
 	}
 }
