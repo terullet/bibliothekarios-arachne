@@ -26,6 +26,11 @@
             <artifactId>log4j-api</artifactId>
             <version>2.23.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>3.5.16</version>
+        </dependency>
     </dependencies>
 
 </project>
