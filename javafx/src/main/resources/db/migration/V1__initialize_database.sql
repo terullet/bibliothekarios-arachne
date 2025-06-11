@@ -42,6 +42,20 @@ CREATE TABLE work_title_updates (
     CONSTRAINT fk_title_update_work FOREIGN KEY work_id REFERENCES works(work_id) ON UPDATE RESTRICT ON DELETE CASCADE
 );
 
+CREATE TABLE sections (
+    section_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    work_id BIGINT NOT NULL,
+    title VARCHAR(256) NOT NULL,
+    CONSTRAINT fk_section_work FOREIGN KEY work_id REFERENCES works(work_id) ON UPDATE RESTRICT ON DELETE CASCADE
+);
+
+CREATE TABLE section_hierarchy_map (
+    section_id BIGINT PRIMARY KEY,
+    parent_id BIGINT NOT NULL,
+    CONSTRAINT fk_section_hierarchy_section FOREIGN KEY section_id REFERENCES sections(section_id) ON UPDATE RESTRICT ON DELETE CASCADE,
+    CONSTRAINT fk_section_hierarchy_parent FOREIGN KEY parent_id REFERENCES sections(section_id) ON UPDATE RESTRICT ON DELETE RESTRICT
+);
+
 CREATE TABLE narou_works (
     work_id BIGINT PRIMARY KEY,
     ncode VARCHAR(12) UNIQUE NOT NULL,
@@ -71,6 +85,13 @@ CREATE TABLE episode_deletes (
     episode_id BIGINT PRIMARY KEY,
     deleted_at TIMESTAMP(0) WITH TIME ZONE NOT NULL,
     CONSTRAINT fk_delete_episode FOREIGN KEY episode_id REFERENCES episodes(episode_id) ON UPDATE RESTRICT ON DELETE CASCADE
+);
+
+CREATE TABLE episode_section_map (
+    episode_id BIGINT PRIMARY KEY,
+    section_id BIGINT NOT NULL,
+    CONSTRAINT fk_episode_section_episode FOREIGN KEY episodes(episode_id) ON UPDATE RESTRICT ON DELETE CASCADE,
+    CONSTRAINT fk_episode_section_section FOREIGN KEY sections(section_id) ON UPDATE RESTRICT ON DELETE CASCADE
 );
 
 CREATE TABLE paragraphs (
@@ -147,7 +168,7 @@ CREATE TABLE user_tag_tag_group_map (
     CONSTRAINT fk_tag_group_group FOREIGN KEY tag_group_id REFERENCES user_tag_groups(tag_group_id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
 
-CREATE TABLE user_tag_group_tag_group_map (
+CREATE TABLE user_tag_group_hierarchy_map (
     tag_group_id INT PRIMARY KEY,
     parent_group_id INT NOT NULL,
     CONSTRAINT fk_tag_group_tag_group_group_id FOREIGN KEY tag_group_id REFERENCES user_tag_groups(tag_group_id) ON UPDATE RESTRICT ON DELETE CASCADE,
