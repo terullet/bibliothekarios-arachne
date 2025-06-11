@@ -1,6 +1,6 @@
 CREATE TABLE sites (
     site_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    site_name VARCHAR(256) NOT NULL
+    site_name VARCHAR(256) UNIQUE NOT NULL
 );
 
 CREATE TABLE hostnames (
@@ -21,7 +21,7 @@ CREATE TABLE works (
     work_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     site_id BIGINT NOT NULL,
     summary CLOB NOT NULL,
-    registered_at TIMESTAMP(3) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    registered_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CONSTRAINT uq_work_site UNIQUE (work_id, site_id),
     CONSTRAINT fk_work_site FOREIGN KEY site_id REFERENCES sites(site_id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
@@ -100,7 +100,7 @@ CREATE TABLE paragraph_deletes (
 );
 
 CREATE TABLE contributors (
-    contributor_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    contributor_id BIGINT AUTO_INCREMENT PRIMARY KEY
 );
 
 CREATE TABLE contributors_sites_map (
@@ -157,7 +157,7 @@ CREATE TABLE works_user_tags_map (
 
 CREATE TABLE review_target_types (
     type_id INT AUTO_INCREMENT PRIMARY KEY,
-    type_name VARCHAR(256)
+    type_name VARCHAR(256) UNIQUE NOT NULL
 );
 
 CREATE TABLE reviews (
