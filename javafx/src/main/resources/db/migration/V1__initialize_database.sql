@@ -154,3 +154,35 @@ CREATE TABLE works_user_tags_map (
     CONSTRAINT fk_works_tags_work FOREIGN KEY work_id REFERENCES works(work_id) ON UPDATE RESTRICT ON DELETE CASCADE,
     CONSTRAINT fk_works_tags_user_tag FOREIGN KEY tag_id REFERENCES user_tags(tag_id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
+
+CREATE TABLE reviews (
+    review_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    registered_at TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE comments (
+    review_id BIGINT PRIMARY KEY,
+    comment CLOB NOT NULL,
+    CONSTRAINT fk_comment_review FOREIGN KEY review_id REFERENCES reviews(review_id) ON UPDATE RESTRICT ON DELETE CASCADE
+);
+
+CREATE TABLE ratings (
+    review_id BIGINT PRIMARY KEY,
+    rate FLOAT NOT NULL,
+    CONSTRAINT fk_rating_review FOREIGN KEY review_id REFERENCES reviews(review_id) ON UPDATE RESTRICT ON DELETE CASCADE
+);
+
+CREATE TABLE reviews_work_map (
+    review_id BIGINT PRIMARY KEY,
+    work_id BIGINT NOT NULL,
+    CONSTRAINT fk_reviews_works_review FOREIGN KEY review_id REFERENCES reviews(review_id) ON UPDATE RESTRICT ON DELETE CASCADE,
+    CONSTRAINT fk_reviews_works_work FOREIGN KEY work_id REFERENCES works(work_id) ON UPDATE RESTRICT ON DELETE RESTRICT
+);
+
+CREATE TABLE reviews_episodes_map (
+    review_id BIGINT NOT NULL,
+    episode_id BIGINT NOT NULL,
+    CONSTRAINT pk_reviews_episodes PRIMARY KEY (review_id, episode_id),
+    CONSTRAINT fk_reviews_episodes_review FOREIGN KEY review_id REFERENCES reviews(review_id) ON UPDATE RESTRICT ON DELETE CASCADE,
+    CONSTRAINT fk_reviews_episodes_episode FOREIGN KEY episode_id REFERENCES episodes(episode_id) ON UPDATE RESTRICT ON DELETE CASCADE
+);
