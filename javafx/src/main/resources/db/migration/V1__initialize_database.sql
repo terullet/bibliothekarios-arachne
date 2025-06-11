@@ -143,8 +143,15 @@ CREATE TABLE user_tag_groups (
 CREATE TABLE user_tag_tag_group_map (
     tag_id INT PRIMARY KEY,
     tag_group_id INT NOT NULL,
-    CONSTRAINT fk_tag_group_tag FOREIGN KEY tag_id REFERENCES user_tags(tag_id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+    CONSTRAINT fk_tag_group_tag FOREIGN KEY tag_id REFERENCES user_tags(tag_id) ON UPDATE RESTRICT ON DELETE CASCADE,
     CONSTRAINT fk_tag_group_group FOREIGN KEY tag_group_id REFERENCES user_tag_groups(tag_group_id) ON UPDATE RESTRICT ON DELETE RESTRICT
+);
+
+CREATE TABLE user_tag_group_tag_group_map (
+    tag_group_id INT PRIMARY KEY,
+    parent_group_id INT NOT NULL,
+    CONSTRAINT fk_tag_group_tag_group_group_id FOREIGN KEY tag_group_id REFERENCES user_tag_groups(tag_group_id) ON UPDATE RESTRICT ON DELETE CASCADE,
+    CONSTRAINT fk_tag_group_tag_group_parent FOREIGN KEY parent_group_id REFERENCES user_tag_groups(tag_group_id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
 
 CREATE TABLE works_user_tags_map (
