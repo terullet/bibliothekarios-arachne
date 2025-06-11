@@ -1,8 +1,12 @@
 package net.terullet.bibliothekarios.arachne;
 
+import java.time.ZonedDateTime;
+
 public interface Work {
 	long getId();
-	Series getSeries();
 	String getTitle();
 	void setTitle(String title);
+	String getSummary();
+	void setSummary(String summary);
+	ZonedDateTime getRegisteredAt();
 }

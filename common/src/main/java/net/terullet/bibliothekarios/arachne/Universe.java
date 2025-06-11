@@ -4,4 +4,6 @@ public interface Universe {
 	long getId();
 	String getName();
 	void setName(String name);
+	String getSummary();
+	void setSummary(String summary);
 }
