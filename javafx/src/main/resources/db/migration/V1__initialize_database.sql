@@ -72,3 +72,34 @@ CREATE TABLE episode_deletes (
     deleted_at TIMESTAMP(0) WITH TIME ZONE NOT NULL,
     CONSTRAINT fk_delete_episode FOREIGN KEY episode_id REFERENCES episodes(episode_id) ON UPDATE RESTRICT ON DELETE CASCADE
 );
+
+CREATE TABLE contributors (
+    contributor_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+);
+
+CREATE TABLE contributors_sites_map (
+    contributor_id BIGINT NOT NULL,
+    site_id BIGINT NOT NULL,
+    handle_name VARCHAR(256) NOT NULL,
+    in_site_id VARCHAR(256) NOT NULL,
+    CONSTRAINT pk_contributor_site PRIMARY KEY (contributor_id, site_id),
+    CONSTRAINT uq_site_in_site UNIQUE (site_id, in_site_id),
+    CONSTRAINT fk_contributors_sites_contributor FOREIGN KEY contributor_id REFERENCES contributors(contributor_id) ON UPDATE CASCADE ON DELETE RESTRICT,
+    CONSTRAINT fk_contributors_sites_site FOREIGN KEY site_id REFERENCES sites(site_id) ON UPDATE RESTRICT ON DELETE RESTRICT
+);
+
+CREATE TABLE contribution_types (
+    type_id INT AUTO_INCREMENT PRIMARY KEY,
+    description VARCHAR(256) UNIQUE NOT NULL
+);
+
+CREATE TABLE contributions (
+    contribution_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    work_id BIGINT NOT NULL,
+    contributor_id BIGINT NOT NULL,
+    site_id BIGINT NOT NULL,
+    type_id INT NOT NULL,
+    CONSTRAINT fk_contribution_work_site FOREIGN KEY (work_id, site_id) REFERENCES works(work_id, site_id) ON UPDATE RESTRICT ON DELETE CASCADE,
+    CONSTRAINT fk_contribution_contributor_site FOREIGN KEY (contributor_id, site_id) REFERENCES contributors_sites(contributor_id, site_id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+    CONSTRAINT fk_contribution_contribution_type FOREIGN KEY type_id REFERENCES contribution_types(type_id) ON UPDATE RESTRICT ON DELETE RESTRICT
+);
