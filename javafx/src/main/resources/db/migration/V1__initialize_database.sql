@@ -140,7 +140,7 @@ CREATE TABLE user_tag_groups (
     tag_group_name VARCHAR(256) NOT NULL
 );
 
-CREATE TABLE user_tags_tag_group_map (
+CREATE TABLE user_tag_tag_group_map (
     tag_id INT PRIMARY KEY,
     tag_group_id INT NOT NULL,
     CONSTRAINT fk_tag_group_tag FOREIGN KEY tag_id REFERENCES user_tags(tag_id) ON UPDATE RESTRICT ON DELETE RESTRICT,
@@ -179,14 +179,14 @@ CREATE TABLE ratings (
     CONSTRAINT fk_rating_review FOREIGN KEY review_id REFERENCES reviews(review_id) ON UPDATE RESTRICT ON DELETE CASCADE
 );
 
-CREATE TABLE reviews_work_map (
+CREATE TABLE review_work_map (
     review_id BIGINT PRIMARY KEY,
     work_id BIGINT NOT NULL,
     CONSTRAINT fk_reviews_works_review FOREIGN KEY review_id REFERENCES reviews(review_id) ON UPDATE RESTRICT ON DELETE CASCADE,
     CONSTRAINT fk_reviews_works_work FOREIGN KEY work_id REFERENCES works(work_id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
 
-CREATE TABLE reviews_episodes_map (
+CREATE TABLE review_episodes_map (
     review_id BIGINT NOT NULL,
     episode_id BIGINT NOT NULL,
     CONSTRAINT pk_reviews_episodes PRIMARY KEY (review_id, episode_id),
@@ -199,11 +199,11 @@ CREATE TABLE bookmarkers (
     bookmarker_name VARCHAR(256) NOT NULL
 );
 
-CREATE TABLE bookmarkers_paragraph_map (
+CREATE TABLE bookmarker_paragraph_map (
     bookmarker_id BIGINT PRIMARY KEY,
     paragraph_id BIGINT NOT NULL,
-    CONSTRAINT fk_bookmarkers_paragraphs_bookmarker FOREIGN KEY bookmarker_id REFERENCES bookmarkers(bookmarker_id) ON UPDATE RESTRICT ON DELETE CASCADE,
-    CONSTRAINT fk_bookmarkers_paragraphs_paragraph FOREIGN KEY paragraph_id REFERENCES paragraphs(paragraph_id) ON UPDATE RESTRICT ON DELETE RESTRICT
+    CONSTRAINT fk_bookmarker_paragraphs_bookmarker FOREIGN KEY bookmarker_id REFERENCES bookmarkers(bookmarker_id) ON UPDATE RESTRICT ON DELETE CASCADE,
+    CONSTRAINT fk_bookmarker_paragraphs_paragraph FOREIGN KEY paragraph_id REFERENCES paragraphs(paragraph_id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
 
 CREATE TABLE reading_records (
@@ -213,7 +213,7 @@ CREATE TABLE reading_records (
     read_to TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL
 );
 
-CREATE TABLE reading_records_paragraphs_map (
+CREATE TABLE reading_record_paragraphs_map (
     record_id BIGINT NOT NULL,
     paragraph_id BIGINT NOT NULL,
     CONSTRAINT pk_reading_record_paragraph PRIMARY KEY (record_id, paragraph_id),
