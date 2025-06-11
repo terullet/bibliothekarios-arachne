@@ -195,7 +195,6 @@ CREATE TABLE bookmarkers (
 CREATE TABLE bookmarkers_paragraph_map (
     bookmarker_id BIGINT PRIMARY KEY,
     paragraph_id BIGINT NOT NULL,
-    CONSTRAINT pk_bookmarkers_paragraphs PRIMARY KEY (bookmarker_id, paragraph_id),
     CONSTRAINT fk_bookmarkers_paragraphs_bookmarker FOREIGN KEY bookmarker_id REFERENCES bookmarkers(bookmarker_id) ON UPDATE RESTRICT ON DELETE CASCADE,
     CONSTRAINT fk_bookmarkers_paragraphs_paragraph FOREIGN KEY paragraph_id REFERENCES paragraphs(paragraph_id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
@@ -208,9 +207,9 @@ CREATE TABLE reading_records (
 );
 
 CREATE TABLE reading_records_paragraphs_map (
-    reading_record_id BIGINT NOT NULL,
+    record_id BIGINT NOT NULL,
     paragraph_id BIGINT NOT NULL,
-    CONSTRAINT pk_reading_record_paragraph PRIMARY KEY (reading_records, paragraph_id),
-    CONSTRAINT fk_reading_record_paragraphs_record FOREIGN KEY reading_record_id REFERENCES reading_records(record_id) ON UPDATE RESTRICT ON DELETE CASCADE,
+    CONSTRAINT pk_reading_record_paragraph PRIMARY KEY (record_id, paragraph_id),
+    CONSTRAINT fk_reading_record_paragraphs_record FOREIGN KEY record_id REFERENCES reading_records(record_id) ON UPDATE RESTRICT ON DELETE CASCADE,
     CONSTRAINT fk_reading_record_paragraphs_paragraph FOREIGN KEY paragraph_id REFERENCES paragraphs(paragraph_id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
