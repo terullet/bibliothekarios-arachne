@@ -1,3 +1,16 @@
+CREATE TABLE sites (
+    site_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    site_name VARCHAR(256) NOT NULL
+);
+
+CREATE TABLE hostnames (
+    host_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    hostname VARCHAR(2048) UNIQUE NOT NULL,
+    site_id BIGINT NOT NULL,
+    description VARCHAR(256) NOT NULL,
+    CONSTRAINT fk_hostname_site FOREIGN KEY site_id REFERENCES sites(site_id) ON UPDATE RESTRICT ON DELETE RESTRICT
+);
+
 CREATE TABLE universes (
     universe_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(256) NOT NULL,
@@ -6,6 +19,7 @@ CREATE TABLE universes (
 
 CREATE TABLE works (
     work_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    site_id BIGINT NOT NULL,
     summary CLOB NOT NULL,
     registered_at TIMESTAMP(3) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CONSTRAINT uq_work_site UNIQUE (work_id, site_id),
