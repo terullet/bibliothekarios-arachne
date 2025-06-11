@@ -129,3 +129,28 @@ CREATE TABLE contributions (
     CONSTRAINT fk_contribution_contributor_site FOREIGN KEY (contributor_id, site_id) REFERENCES contributors_sites(contributor_id, site_id) ON UPDATE RESTRICT ON DELETE RESTRICT,
     CONSTRAINT fk_contribution_contribution_type FOREIGN KEY type_id REFERENCES contribution_types(type_id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
+
+CREATE TABLE user_tags (
+    tag_id INT AUTO_INCREMENT PRIMARY KEY,
+    tag_name VARCHAR(256) NOT NULL
+);
+
+CREATE TABLE user_tag_groups (
+    tag_group_id INT AUTO_INCREMENT PRIMARY KEY,
+    tag_group_name VARCHAR(256) NOT NULL
+);
+
+CREATE TABLE user_tags_tag_group_map (
+    tag_id INT PRIMARY KEY,
+    tag_group_id INT NOT NULL,
+    CONSTRAINT fk_tag_group_tag FOREIGN KEY tag_id REFERENCES user_tags(tag_id) ON UPDATE RESTRICT ON DELETE RESTRICT,
+    CONSTRAINT fk_tag_group_group FOREIGN KEY tag_group_id REFERENCES user_tag_groups(tag_group_id) ON UPDATE RESTRICT ON DELETE RESTRICT
+);
+
+CREATE TABLE works_user_tags_map (
+    work_id BIGINT NOT NULL,
+    tag_id INT NOT NULL,
+    CONSTRAINT pk_work_user_tag PRIMARY KEY (work_id, tag_id),
+    CONSTRAINT fk_works_tags_work FOREIGN KEY work_id REFERENCES works(work_id) ON UPDATE RESTRICT ON DELETE CASCADE,
+    CONSTRAINT fk_works_tags_user_tag FOREIGN KEY tag_id REFERENCES user_tags(tag_id) ON UPDATE RESTRICT ON DELETE RESTRICT
+);
