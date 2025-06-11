@@ -163,7 +163,7 @@ CREATE TABLE review_target_types (
 CREATE TABLE reviews (
     review_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     target_type INT NOT NULL,
-    registered_at TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP
+    registered_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_review_target_type FOREIGN KEY target_type REFERENCES review_target_types(type_id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
 
@@ -209,8 +209,8 @@ CREATE TABLE bookmarkers_paragraph_map (
 CREATE TABLE reading_records (
     record_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     read_seconds INT NOT NULL,
-    read_from TIMESTAMP(0) NOT NULL,
-    read_to TIMESTAMP(0) NOT NULL
+    read_from TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL,
+    read_to TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL
 );
 
 CREATE TABLE reading_records_paragraphs_map (
