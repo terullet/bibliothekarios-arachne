@@ -6,7 +6,6 @@ CREATE TABLE universes (
 
 CREATE TABLE works (
     work_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    title VARCHAR(256) NOT NULL,
     summary CLOB NOT NULL,
     registered_at TIMESTAMP(3) WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CONSTRAINT uq_work_site UNIQUE (work_id, site_id),
@@ -18,6 +17,15 @@ CREATE TABLE works_universe_map (
     universe_id BIGINT NOT NULL,
     CONSTRAINT fk_works_universe_work FOREIGN KEY work_id REFERENCES works(work_id) ON UPDATE RESTRICT ON DELETE CASCADE,
     CONSTRAINT fk_works_universe_universe FOREIGN KEY universe_id REFERENCES universes(universe_id) ON UPDATE RESTRICT ON DELETE CASCADE
+);
+
+CREATE TABLE work_title_updates (
+    title_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    work_id BIGINT NOT NULL,
+    title VARCHAR(256) NOT NULL,
+    updated_at TIMESTAMP(0) WITH TIME ZONE NOT NULL,
+    CONSTRAINT uq_work_update UNIQUE (work_id, updated_at),
+    CONSTRAINT fk_title_update_work FOREIGN KEY work_id REFERENCES works(work_id) ON UPDATE RESTRICT ON DELETE CASCADE
 );
 
 CREATE TABLE narou_works (
@@ -40,7 +48,6 @@ CREATE TABLE episodes (
 CREATE TABLE episode_posts (
     post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     episode_id BIGINT NOT NULL,
-    content CLOB NOT NULL,
     posted_at TIMESTAMP(0) WITH TIME ZONE NOT NULL,
     CONSTRAINT uq_episode_post UNIQUE (episode_id, posted_at),
     CONSTRAINT fk_post_episode FOREIGN KEY episode_id REFERENCES episodes(episode_id) ON UPDATE RESTRICT ON DELETE CASCADE
