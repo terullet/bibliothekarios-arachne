@@ -155,9 +155,16 @@ CREATE TABLE works_user_tags_map (
     CONSTRAINT fk_works_tags_user_tag FOREIGN KEY tag_id REFERENCES user_tags(tag_id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
 
+CREATE TABLE review_target_types (
+    type_id INT AUTO_INCREMENT PRIMARY KEY,
+    type_name VARCHAR(256)
+);
+
 CREATE TABLE reviews (
     review_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    target_type INT NOT NULL,
     registered_at TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP
+    CONSTRAINT fk_review_target_type FOREIGN KEY target_type REFERENCES review_target_types(type_id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
 
 CREATE TABLE comments (
