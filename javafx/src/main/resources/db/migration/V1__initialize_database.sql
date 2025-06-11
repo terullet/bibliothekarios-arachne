@@ -27,3 +27,27 @@ CREATE TABLE narou_works (
     genre_id INT NOT NULL,
     CONSTRAINT fk_narou_work FOREIGN KEY work_id REFERENCES works(work_id) ON UPDATE RESTRICT ON DELETE CASCADE
 );
+
+CREATE TABLE episodes (
+    episode_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    work_id BIGINT NOT NULL,
+    title VARCHAR(256) NOT NULL,
+    order_number BIGINT NOT NULL,
+    CONSTRAINT uq_episode_order UNIQUE (work_id, order_number),
+    CONSTRAINT fk_episode_work FOREIGN KEY work_id REFERENCES works(work_id) ON UPDATE RESTRICT ON DELETE CASCADE
+);
+
+CREATE TABLE episode_posts (
+    post_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    episode_id BIGINT NOT NULL,
+    content CLOB NOT NULL,
+    posted_at TIMESTAMP(0) WITH TIME ZONE NOT NULL,
+    CONSTRAINT uq_episode_post UNIQUE (episode_id, posted_at),
+    CONSTRAINT fk_post_episode FOREIGN KEY episode_id REFERENCES episodes(episode_id) ON UPDATE RESTRICT ON DELETE CASCADE
+);
+
+CREATE TABLE episode_deletes (
+    episode_id BIGINT PRIMARY KEY,
+    deleted_at TIMESTAMP(0) WITH TIME ZONE NOT NULL,
+    CONSTRAINT fk_delete_episode FOREIGN KEY episode_id REFERENCES episodes(episode_id) ON UPDATE RESTRICT ON DELETE CASCADE
+);
