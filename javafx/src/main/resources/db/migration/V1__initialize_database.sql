@@ -142,11 +142,11 @@ CREATE TABLE contribution_types (
 );
 
 CREATE TABLE contributions (
-    contribution_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     work_id BIGINT NOT NULL,
     contributor_id BIGINT NOT NULL,
     site_id BIGINT NOT NULL,
     type_id INT NOT NULL,
+    CONSTRAINT pk_contribution PRIMARY KEY (work_id, contributor_id, type_id),
     CONSTRAINT fk_contribution_work_site FOREIGN KEY (work_id, site_id) REFERENCES works(work_id, site_id) ON UPDATE RESTRICT ON DELETE CASCADE,
     CONSTRAINT fk_contribution_contributor_site FOREIGN KEY (contributor_id, site_id) REFERENCES contributors_sites(contributor_id, site_id) ON UPDATE RESTRICT ON DELETE RESTRICT,
     CONSTRAINT fk_contribution_contribution_type FOREIGN KEY (type_id) REFERENCES contribution_types(type_id) ON UPDATE RESTRICT ON DELETE RESTRICT
