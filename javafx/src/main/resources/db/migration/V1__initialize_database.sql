@@ -252,13 +252,13 @@ CREATE TABLE hyperlinks (
 CREATE TABLE hyperlink_work_map (
     link_id BIGINT PRIMARY KEY,
     work_id BIGINT NOT NULL,
-    CONSTRAINT fk_hyperlink_work_link FOREIGN KEY (link_id) REFERENCES hyperlinks(link_id),
-    CONSTRAINT fk_hyperlink_work_work FOREIGN KEY (work_id) REFERENCES works(work_id)
+    CONSTRAINT fk_hyperlink_work_link FOREIGN KEY (link_id) REFERENCES hyperlinks(link_id) ON UPDATE RESTRICT ON DELETE CASCADE,
+    CONSTRAINT fk_hyperlink_work_work FOREIGN KEY (work_id) REFERENCES works(work_id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
 
 CREATE TABLE hyperlink_contributor_map (
     link_id BIGINT PRIMARY KEY,
     contributor_id BIGINT NOT NULL,
-    CONSTRAINT fk_hyperlink_contributor_link FOREIGN KEY (link_id) REFERENCES hyperlinks(link_id),
-    CONSTRAINT fk_hyperlink_contributor_contributor FOREIGN KEY (contributor_id) REFERENCES contributors(contributor_id)
+    CONSTRAINT fk_hyperlink_contributor_link FOREIGN KEY (link_id) REFERENCES hyperlinks(link_id) ON UPDATE RESTRICT ON DELETE CASCADE,
+    CONSTRAINT fk_hyperlink_contributor_contributor FOREIGN KEY (contributor_id) REFERENCES contributors(contributor_id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
