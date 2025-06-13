@@ -26,11 +26,10 @@ CREATE TABLE works_universe_map (
 );
 
 CREATE TABLE work_title_updates (
-    title_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     work_id BIGINT NOT NULL,
     title VARCHAR(256) NOT NULL,
     updated_at TIMESTAMP(0) WITH TIME ZONE NOT NULL,
-    CONSTRAINT uq_work_update UNIQUE (work_id, updated_at),
+    CONSTRAINT pk_work_title_update PRIMARY KEY (work_id, updated_at),
     CONSTRAINT fk_title_update_work FOREIGN KEY (work_id) REFERENCES works(work_id) ON UPDATE RESTRICT ON DELETE CASCADE
 );
 
@@ -84,8 +83,9 @@ CREATE TABLE episode_deletes (
 CREATE TABLE episode_section_map (
     episode_id BIGINT PRIMARY KEY,
     section_id BIGINT NOT NULL,
-    CONSTRAINT fk_episode_section_episode FOREIGN KEY episode_id REFERENCES episodes(episode_id) ON UPDATE RESTRICT ON DELETE CASCADE,
-    CONSTRAINT fk_episode_section_section FOREIGN KEY section_id REFERENCES sections(section_id) ON UPDATE RESTRICT ON DELETE CASCADE
+    work_id BIGINT NOT NULL,
+    CONSTRAINT fk_episode_section_episode FOREIGN KEY (episode_id, work_id) REFERENCES episodes(episode_id, work_id) ON UPDATE RESTRICT ON DELETE CASCADE,
+    CONSTRAINT fk_episode_section_section FOREIGN KEY (section_id, work_id) REFERENCES sections(section_id, work_id) ON UPDATE RESTRICT ON DELETE CASCADE
 );
 
 CREATE TABLE paragraphs (
@@ -98,12 +98,11 @@ CREATE TABLE paragraphs (
 );
 
 CREATE TABLE paragraph_updates (
-    update_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     paragraph_id BIGINT NOT NULL,
     episode_id BIGINT NOT NULL,
     post_id BIGINT NOT NULL,
     content CLOB NOT NULL,
-    CONSTRAINT uq_paragraph_episode_post UNIQUE (paragraph_id, post_id),
+    CONSTRAINT pk_paragraph_update PRIMARY KEY (paragraph_id, post_id),
     CONSTRAINT fk_paragraph_update_episode_post FOREIGN KEY (post_id, episode_id) REFERENCES episode_posts(post_id, episode_id) ON UPDATE RESTRICT ON DELETE CASCADE,
     CONSTRAINT fk_paragraph_update_paragraph FOREIGN KEY (paragraph_id, episode_id) REFERENCES paragraphs(paragraph_id, episode_id) ON UPDATE RESTRICT ON DELETE CASCADE
 );
