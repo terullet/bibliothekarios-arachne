@@ -4,7 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import net.terullet.bibliothekarios.arachne.Series;
+import net.terullet.bibliothekarios.arachne.book.Series;
 
 import java.time.LocalDate;
 
@@ -25,7 +25,7 @@ public class PrintedBook implements net.terullet.bibliothekarios.arachne.book.Pr
 	public Series getSeries() {
 		return this.seriesProperty.get();
 	}
-	public void setWork(Series series) {
+	public void setSeries(Series series) {
 		this.seriesProperty.set(series);
 	}
 
