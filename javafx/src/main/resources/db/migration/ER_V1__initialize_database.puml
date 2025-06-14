@@ -1,0 +1,349 @@
+@startuml "v1 Physical Model for H2 Database"
+' type of entities
+!define RESOURCE(id, name) entity "name" as id << (R,#AADFFF) >>
+!define EVENT(id, name) entity "name" as id << (E,#AAFFAA) >>
+!define MAP(id, name) entity "name" as id << (M,#FFDDAA) >>
+
+' visualize foreign key constraint with arrows
+' (One arrow represents only one constraint.)
+' (If there are multiple constraints across the same tables, draw as many arrows as there are constraints.)
+!define FK(from, to) from --[#999]> to
+
+' This is just an example.
+package "Legend" as legend {
+    entity "Legend (EntityTypeMark & EntityName)" as legend << (L,#FF77CC) >> {
+        + primary_key_column : TYPE
+        --
+        # foreign_key_column : TYPE
+        * not_null_column : TYPE <<CONSTRAINT>>
+        nullable_column : TYPE
+        --
+        <<COMPOSITE CONSTRAINT>> (uq_column1, uq_column2)
+    }
+    FK(legend, legend)
+}
+
+' ----------------------------------------------------------------
+' ER diagrams
+' ----------------------------------------------------------------
+
+RESOURCE(sites, "Site") {
+    + site_id : INT
+    --
+    * site_name : VARCHAR(256) <<UNIQUE>>
+}
+
+RESOURCE(universes, "Universe") {
+    + universe_id : BIGINT
+    --
+    * title : VARCHAR(256)
+    * summary : CLOB
+}
+
+RESOURCE(works, "Work") {
+    + work_id : BIGINT
+    --
+    # site_id : BIGINT
+    * summary : CLOB
+    * registered_at : TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP
+}
+FK(works, sites)
+
+MAP(works_universe_map, "Work-Universe") {
+    + work_id : BIGINT
+    --
+    # universe_id : BIGINT
+}
+FK(works_universe_map, works)
+FK(works_universe_map, universes)
+
+EVENT(work_title_updates, "WorkTitle Update") {
+    + work_id : BIGINT
+    + updated_at : TIMESTAMP(0) WITH TIME ZONE
+    --
+    * title : VARCHAR(256)
+}
+FK(work_title_updates, works)
+
+RESOURCE(sections, "Section") {
+    + section_id : BIGINT
+    --
+    # work_id : BIGINT
+    * title : VARCHAR(256)
+    --
+    <<UNIQUE>> (section_id, work_id)
+}
+FK(sections, works)
+
+MAP(section_hierarchy_map, "Section-Hierarchy") {
+    + section_id : BIGINT
+    --
+    # parent_id : BIGINT
+    # work_id : BIGINT
+    --
+    <<FK>> (section_id, work_id)
+    <<FK>> (parent_id, work_id)
+}
+FK(section_hierarchy_map, sections)
+FK(section_hierarchy_map, sections)
+
+RESOURCE(narou_works, "NarouWork") {
+    + work_id : BIGINT
+    --
+    * ncode : VARCHAR(12) <<UNIQUE>>
+    * narou_id : BIGINT <<UNIQUE>>
+    * genre_id : INT
+}
+FK(narou_works, works)
+
+RESOURCE(episodes, "Episode") {
+    + episode_id : BIGINT
+    --
+    # work_id : BIGINT
+    * title : VARCHAR(256)
+    * order_number : BIGINT
+    --
+    <<UNIQUE>> (work_id, order_number)
+}
+FK(episodes, works)
+
+MAP(episode_section_map, "Episode-Section") {
+    + episode_id : BIGINT
+    --
+    # section_id : BIGINT
+    # work_id : BIGINT
+    --
+    <<FK>> (episode_id, work_id)
+    <<FK>> (section_id, work_id)
+}
+FK(episode_section_map, episodes)
+FK(episode_section_map, sections)
+
+EVENT(episode_posts, "Episode Post") {
+    + post_id : BIGINT
+    --
+    # episode_id : BIGINT
+    * posted_at : TIMESTAMP(0) WITH TIME ZONE
+    --
+    <<UNIQUE>> (episode_id, posted_at)
+}
+FK(episode_posts, episodes)
+
+EVENT(episode_deletes, "Episode Delete") {
+    + episode_id : BIGINT
+    --
+    * deleted_at : TIMESTAMP(0) WITH TIME ZONE
+}
+FK(episode_deletes, episodes)
+
+RESOURCE(paragraphs, "Paragraph") {
+    + paragraph_id : BIGINT
+    --
+    # episode_id : BIGINT
+    * order_number : BIGINT
+    --
+    <<UNIQUE>> (paragraph_id, episode_id)
+    <<UNIQUE>> (episode_id, order_number)
+}
+FK(paragraphs, episodes)
+
+EVENT(paragraph_updates, "Paragraph Update") {
+    + paragraph_id : BIGINT
+    + post_id : BIGINT
+    --
+    # episode_id : BIGINT
+    * content : CLOB
+    --
+    <<FK>> (post_id, episode_id)
+    <<FK>> (paragraph_id, episode_id)
+}
+FK(paragraph_updates, episode_posts)
+FK(paragraph_updates, paragraphs)
+
+EVENT(paragraph_deletes, "Paragraph Delete") {
+    + paragraph_id : BIGINT
+    --
+    # episode_id : BIGINT
+    # post_id : BIGINT
+    --
+    <<FK>> (episode_id, post_id)
+    <<FK>> (paragraph_id, episode_id)
+}
+FK(paragraph_deletes, episode_posts)
+FK(paragraph_deletes, paragraphs)
+
+RESOURCE(contributors, "Contributor") {
+    + contributor_id : BIGINT
+    --
+    * handle_name : VARCHAR(256)
+}
+
+RESOURCE(contribution_types, "ContributionType") {
+    + type_id : INT
+    --
+    * type_name : VARCHAR(256) <<UNIQUE>>
+}
+
+MAP(contributions, "Contribution") {
+    + work_id : BIGINT
+    + contributor_id : BIGINT
+    + type_id : INT
+}
+FK(contributions, works)
+FK(contributions, contributors)
+FK(contributions, contribution_types)
+
+RESOURCE(user_tags, "UserTag") {
+    + tag_id : INT
+    --
+    * tag_name : VARCHAR(256)
+}
+
+RESOURCE(user_tag_groups, "UserTagGroup") {
+    + tag_group_id : INT
+    --
+    * tag_group_name : VARCHAR(256)
+}
+
+MAP(user_tag_tag_group_map, "Tag-TagGroup") {
+    + tag_id : INT
+    --
+    # tag_group_id : INT
+}
+FK(user_tag_tag_group_map, user_tags)
+FK(user_tag_tag_group_map, user_tag_groups)
+
+MAP(user_tag_group_hierarchy_map, "TagGroup Hierarchy") {
+    + tag_group_id : INT
+    --
+    # parent_group_id : INT
+}
+FK(user_tag_group_hierarchy_map, user_tag_groups)
+FK(user_tag_group_hierarchy_map, user_tag_groups)
+
+MAP(works_user_tags_map, "Work-UserTag") {
+    + work_id : BIGINT
+    + tag_id : INT
+}
+FK(works_user_tags_map, works)
+FK(works_user_tags_map, user_tags)
+
+RESOURCE(review_target_types, "ReviewTargetType") {
+    + type_id : INT
+    --
+    * type_name : VARCHAR(256) <<UNIQUE>>
+}
+
+EVENT(reviews, "Review") {
+    + review_id : BIGINT
+    --
+    # target_type : INT
+    * registered_at : TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP
+}
+FK(reviews, review_target_types)
+
+RESOURCE(comments, "Comment") {
+    + review_id : BIGINT
+    --
+    * comment : CLOB
+}
+FK(comments, reviews)
+
+RESOURCE(ratings, "Rating") {
+    + review_id : BIGINT
+    --
+    * rate : FLOAT
+}
+FK(ratings, reviews)
+
+MAP(review_work_map, "Review-Work") {
+    + review_id : BIGINT
+    --
+    # work_id : BIGINT
+}
+FK(review_work_map, reviews)
+FK(review_work_map, works)
+
+MAP(review_episodes_map, "Review-Episode") {
+    + review_id : BIGINT
+    + episode_id : BIGINT
+}
+FK(review_episodes_map, reviews)
+FK(review_episodes_map, episodes)
+
+MAP(review_contributor_map, "Review-Contributor") {
+    + review_id : BIGINT
+    --
+    # contributor_id : BIGINT
+}
+FK(review_contributor_map, reviews)
+FK(review_contributor_map, contributors)
+
+RESOURCE(bookmarkers, "Bookmarker") {
+    + bookmarker_id : BIGINT
+    --
+    * bookmarker_name : VARCHAR(256)
+}
+
+MAP(bookmarker_paragraph_map, "Bookmarker-Paragraph") {
+    + bookmarker_id : BIGINT
+    --
+    # paragraph_id : BIGINT
+}
+FK(bookmarker_paragraph_map, bookmarkers)
+FK(bookmarker_paragraph_map, paragraphs)
+
+MAP(bookmarker_episode_map, "Bookmarker-Episode") {
+    + bookmarker_id : BIGINT
+    --
+    # episode_id : BIGINT
+}
+FK(bookmarker_episode_map, bookmarkers)
+FK(bookmarker_episode_map, episodes)
+
+EVENT(reading_records, "ReadingRecord") {
+    + record_id : BIGINT
+    --
+    * read_seconds : INT
+    * read_from : TIMESTAMP(0)
+    * read_to : TIMESTAMP(0)
+}
+
+MAP(reading_record_paragraphs_map, "ReadingRecord-Paragraph") {
+    + record_id : BIGINT
+    + paragraph_id : BIGINT
+}
+FK(reading_record_paragraphs_map, reading_records)
+FK(reading_record_paragraphs_map, paragraphs)
+
+MAP(reading_record_episode_map, "ReadingRecord-Episode") {
+    + record_id : BIGINT
+    + episode_id : BIGINT
+}
+FK(reading_record_episode_map, reading_records)
+FK(reading_record_episode_map, episodes)
+
+RESOURCE(hyperlinks, "Hyperlink") {
+    + link_id : BIGINT
+    --
+    * link : VARCHAR(2048) <<UNIQUE>>
+    * link_name : VARCHAR(256)
+}
+
+MAP(hyperlink_work_map, "Hyperlink-Work") {
+    + link_id : BIGINT
+    --
+    # work_id : BIGINT
+}
+FK(hyperlink_work_map, hyperlinks)
+FK(hyperlink_work_map, works)
+
+MAP(hyperlink_contributor_map, "Hyperlink-Contributor") {
+    + link_id : BIGINT
+    --
+    # contributor_id : BIGINT
+}
+FK(hyperlink_contributor_map, hyperlinks)
+FK(hyperlink_contributor_map, contributors)
+
+@enduml

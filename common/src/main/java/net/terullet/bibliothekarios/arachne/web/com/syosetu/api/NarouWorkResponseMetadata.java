@@ -7,8 +7,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public abstract sealed class NarouWorkResponseMetadata permits NarouAllAgesWorkResponseMetadata, NarouR18WorkResponseMetadata {
 	private final String ncode;
@@ -16,7 +15,7 @@ public abstract sealed class NarouWorkResponseMetadata permits NarouAllAgesWorkR
 	private final long writerId;
 	private final String writer;
 	private final String summary;
-	private final List<String> keywords;
+	private final Set<String> keywords;
 	private final ZonedDateTime firstPostedAt;
 	private final ZonedDateTime lastPostedAt;
 	private final NarouWorkType workType;
@@ -75,7 +74,7 @@ public abstract sealed class NarouWorkResponseMetadata permits NarouAllAgesWorkR
 		this.writerId = writerId;
 		this.writer = writer;
 		this.summary = summary;
-		this.keywords = Arrays.asList(keywords.split(" "));
+		this.keywords = new LinkedHashSet<>(Arrays.asList(keywords.split(" ")));
 		this.firstPostedAt = ZonedDateTime.of(LocalDateTime.parse(firstPostedAt, NAROU_WORK_DATETIME_FORMAT), NAROU_TIMEZONE);
 		this.lastPostedAt = ZonedDateTime.of(LocalDateTime.parse(lastPostedAt, NAROU_WORK_DATETIME_FORMAT), NAROU_TIMEZONE);
 		this.workType = novelType == 1 ? (isEnded != 0 ? NarouWorkType.SERIES_ENDED : NarouWorkType.CURRENTLY_SERIALIZED) : NarouWorkType.STANDALONE;
@@ -113,7 +112,7 @@ public abstract sealed class NarouWorkResponseMetadata permits NarouAllAgesWorkR
 	public String getSummary() {
 		return summary;
 	}
-	public List<String> getKeywords() {
+	public Set<String> getKeywords() {
 		return keywords;
 	}
 	public ZonedDateTime getFirstPostedAt() {

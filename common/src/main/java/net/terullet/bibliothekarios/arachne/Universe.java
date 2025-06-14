@@ -2,6 +2,6 @@ package net.terullet.bibliothekarios.arachne;
 
 public interface Universe {
 	long getId();
-	String getName();
-	void setName(String name);
+	String getTitle();
+	void setTitle(String title);
 }
