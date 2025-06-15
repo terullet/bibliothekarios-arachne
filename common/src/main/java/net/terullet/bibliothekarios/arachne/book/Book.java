@@ -4,7 +4,8 @@ import net.terullet.bibliothekarios.arachne.Work;
 
 import java.time.LocalDate;
 
-public interface Book extends Work {
+public interface Book {
+	Series getSeries();
 	LocalDate getPublishedAt();
 	void setPublishedAt(LocalDate publishedAt);
 }
