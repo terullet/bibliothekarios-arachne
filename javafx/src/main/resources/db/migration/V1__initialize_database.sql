@@ -1,8 +1,3 @@
-CREATE TABLE sites (
-    site_id INT AUTO_INCREMENT PRIMARY KEY,
-    site_name VARCHAR(256) UNIQUE NOT NULL
-);
-INSERT INTO sites(site_name) VALUES ('書籍'), ('小説家になろう'), ('小説家になろう（R18）');
 
 CREATE TABLE universes (
     universe_id BIGINT AUTO_INCREMENT PRIMARY KEY,
