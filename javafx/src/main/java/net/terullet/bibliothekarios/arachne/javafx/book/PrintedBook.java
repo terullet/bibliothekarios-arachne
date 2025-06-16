@@ -4,11 +4,11 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import net.terullet.bibliothekarios.arachne.book.Series;
+import net.terullet.bibliothekarios.arachne.ui.book.Series;
 
 import java.time.LocalDate;
 
-public class PrintedBook implements net.terullet.bibliothekarios.arachne.book.PrintedBook {
+public class PrintedBook implements net.terullet.bibliothekarios.arachne.ui.book.PrintedBook {
 	private final long id;
 	private final ObjectProperty<Series> seriesProperty = new SimpleObjectProperty<>();
 	private final StringProperty titleProperty = new SimpleStringProperty();
