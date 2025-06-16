@@ -7,7 +7,7 @@ import net.terullet.bibliothekarios.arachne.repository.entity.web.EpisodeTitleUp
 import java.util.List;
 
 public interface EpisodeMapper {
-	List<EpisodeEntity> getEpisodesByWorkId(long workId);
+	List<EpisodeEntity> selectEpisodesByWorkId(long workId);
 	int updateEpisodeTitle(EpisodeTitleUpdateRequest episode);
 	int updateEpisodeOrder(EpisodeOrderUpdateRequest episode);
 	int deleteEpisode(long id);
