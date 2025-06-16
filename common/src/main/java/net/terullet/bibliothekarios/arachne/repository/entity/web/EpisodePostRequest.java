@@ -2,7 +2,7 @@ package net.terullet.bibliothekarios.arachne.repository.entity.web;
 
 import java.time.ZonedDateTime;
 
-public class EpisodePostRequest {
+public final class EpisodePostRequest {
 	private Long postId;
 	private final long episodeId;
 	private final ZonedDateTime postedAt;
