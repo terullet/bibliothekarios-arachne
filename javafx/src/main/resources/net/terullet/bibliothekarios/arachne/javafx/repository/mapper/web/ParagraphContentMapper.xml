@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.terullet.bibliothekarios.arachne.repository.mapper.web.ParagraphContentMapper">
+
+    <!-- ResultMap for ParagraphContentEntity -->
+    <resultMap id="paragraphContentResultMap" type="net.terullet.bibliothekarios.arachne.repository.entity.web.ParagraphContentEntity">
+        <result property="paragraphId" column="paragraph_id"/>
+        <result property="content" column="content"/>
+    </resultMap>
+
+    <!-- Select currently alive paragraph contents by episode ID -->
+    <select id="selectCurrentlyAliveParagraphContentsByEpisodeId"
+            parameterType="long"
+            resultMap="paragraphContentResultMap">
+        SELECT p.paragraph_id, p.order_number, pu.content
+        FROM paragraph_updates pu
+        INNER JOIN paragraphs p ON pu.paragraph_id = p.paragraph_id AND pu.episode_id = p.episode_id
+        LEFT JOIN paragraph_deletes pd ON pd.paragraph_id = pu.paragraph_id AND pd.episode_id = pu.episode_id
+        WHERE p.episode_id = #{episodeId} AND pd.paragraph_id IS NULL
+        ORDER BY p.order_number ASC
+    </select>
+
+    <!-- Insert paragraph content updates -->
+    <insert id="updateParagraphContents" parameterType="java.util.Set">
+        INSERT INTO paragraph_updates (paragraph_id, episode_id, post_id, content) VALUES
+        <foreach collection="collection" item="item" separator=",">
+            (#{item.paragraphId}, #{item.episodeId}, #{item.postId}, #{item.content})
+        </foreach>
+    </insert>
+
+    <!-- Insert paragraph content deletes -->
+    <insert id="deleteParagraphContents" parameterType="java.util.Set">
+        INSERT INTO paragraph_deletes (paragraph_id, episode_id, post_id) VALUES
+        <foreach collection="collection" item="item" separator=",">
+            (#{item.paragraphId}, #{item.episodeId}, #{item.postId})
+        </foreach>
+    </insert>
+
+</mapper>

@@ -5,9 +5,10 @@ import net.terullet.bibliothekarios.arachne.repository.entity.web.ParagraphConte
 import net.terullet.bibliothekarios.arachne.repository.entity.web.ParagraphContentUpdateEventEntity;
 
 import java.util.List;
+import java.util.Set;
 
 public interface ParagraphContentMapper {
 	List<ParagraphContentEntity> selectCurrentlyAliveParagraphContentsByEpisodeId(long episodeId);
-	int updateParagraphContent(ParagraphContentUpdateEventEntity paragraphContent);
-	int deleteParagraphContent(ParagraphContentDeleteEventEntity paragraphContent);
+	int updateParagraphContents(Set<ParagraphContentUpdateEventEntity> paragraphContent);
+	int deleteParagraphContents(Set<ParagraphContentDeleteEventEntity> paragraphContent);
 }
