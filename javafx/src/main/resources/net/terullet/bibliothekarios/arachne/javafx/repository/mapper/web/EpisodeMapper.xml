@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper>
+    <resultMap id="episodeResultMap" type="net.terullet.bibliothekarios.arachne.repository.entity.web.EpisodeEntity">
+        <id property="id" column="episode_id" />
+        <result property="title" column="title" />
+        <result property="firstPostedAt" column="first_posted_at" javaType="java.time.ZonedDateTime" />
+        <result property="lastUpdatedAt" column="last_posted_at" javaType="java.time.ZonedDateTime" />
+        <result property="isDeleted" column="is_deleted" />
+    </resultMap>
+
+    <select id="selectEpisodesByWorkId" resultMap="episodeResultMap">
+        SELECT
+            e.episode_id,
+            e.title,
+            e.first_posted_at,
+            ep_last_post.posted_at AS last_posted_at,
+            (ed.episode_id IS NOT NULL) AS is_deleted
+        FROM episodes e
+        INNER JOIN (
+            SELECT
+                episode_id,
+                MAX(posted_at) AS posted_at
+            FROM episode_posts
+            GROUP BY episode_id
+        ) ep_last_post ON e.episode_id = ep_last_post.episode_id
+        LEFT JOIN episode_deletes ed ON e.episode_id = ed.episode_id
+        WHERE work_id = #{workId}
+        ORDER BY e.order_number ASC
+    </select>
+    
+    <insert id="insertEpisodes" parameterType="java.util.Set" useGeneratedKeys="true" keyProperty="id" keyColumn="episode_id">
+        INSERT INTO episodes (work_id, title, order_number, first_posted_at) VALUES
+        <foreach collection="collection" item="item" separator=",">
+            (#{workId}, #{title}, #{orderNumber}, #{firstPostedAt})
+        </foreach>
+    </insert>
+    
+    <insert id="updateEpisodes" parameterType="java.util.Set" useGeneratedKeys="true" keyProperty="postId" keyColumn="post_id">
+        INSERT INTO episode_posts (episode_id, posted_at) VALUES
+        <foreach collection="collection" item="item" separator=",">
+            (#{episodeId}, #{postedAt})
+        </foreach>
+    </insert>
+
+    <update id="updateEpisodeTitle" parameterType="net.terullet.bibliothekarios.arachne.repository.entity.web.EpisodeTitleUpdateRequest">
+        UPDATE episodes
+        SET title = #{newTitle}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateEpisodeOrder" parameterType="net.terullet.bibliothekarios.arachne.repository.entity.web.EpisodeOrderUpdateRequest">
+        UPDATE episodes
+        SET order_number = #{newOrderNumber}
+        WHERE id = #{id}
+    </update>
+
+    <insert id="removeEpisodes" parameterType="java.util.Set">
+        INSERT INTO episode_deletes VALUES
+        <foreach collection="collection" item="item" separator=",">
+            (#{item.episodeId}, #{item.removedAt})
+        </foreach>
+    </insert>
+
+    <delete id="deleteEpisode" parameterType="long">
+        DELETE FROM episodes WHERE id = #{id}
+    </delete>
+</mapper>
