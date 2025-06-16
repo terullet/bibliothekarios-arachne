@@ -255,7 +255,7 @@ CREATE TABLE reading_record_episode_map (
 CREATE TABLE hyperlinks (
     link_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     link VARCHAR(2048) UNIQUE NOT NULL,
-    link_name VARCHAR(256) NOT NULL
+    description VARCHAR(256) NOT NULL
 );
 
 CREATE TABLE hyperlink_work_map (
