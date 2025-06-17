@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.terullet.bibliothekarios.arachne.repository.mapper.WorkMapper">
+    <resultMap id="multiWorksResultMap" type="net.terullet.bibliothekarios.arachne.repository.entity.WorkListElementEntity">
+        <constructor>
+            <idArg name="id" column="work_id" javaType="_long" />
+            <arg name="title" column="latest_title" javaType="string" />
+        </constructor>
+    </resultMap>
+
+    <select id="selectAllWorks" resultMap="multiWorksResultMap">
+        SELECT
+            w.work_id,
+            ranked.title as latest_title
+        FROM works w
+        INNER JOIN (
+            SELECT
+                work_id,
+                title,
+                ROW_NUMBER() OVER (PARTITION BY work_id ORDER BY updated_at DESC) as rn
+            FROM work_title_updates
+        ) ranked ON w.work_id = ranked.work_id AND ranked.rn = 1;
+    </select>
+
+    <select id="selectWorksByUniverseId" resultMap="multiWorksResultMap" parameterType="_long">
+        SELECT
+            work_id,
+            title as latest_title
+        FROM (
+            SELECT
+                work_id,
+                title,
+                ROW_NUMBER() OVER (PARTITION BY work_id ORDER BY updated_at DESC) as rn
+            FROM work_title_updates
+            WHERE work_id IN (
+                SELECT work_id
+                FROM work_universe_map
+                WHERE universe_id = #{universeId}
+            )
+        ) ranked
+        WHERE ranked.rn = 1;
+    </select>
+
+    <!-- TODO: selectWorkByWorkId -->
+
+    <insert id="updateWorkTitle">
+        INSERT INTO work_title_updates (id, updated_at, title) VALUE (#{id}, #{updatedAt}, #{newTitle})
+    </insert>
+
+    <delete id="deleteWork">
+        DELETE FROM work_title_updates WHERE id = #{id}
+    </delete>
+</mapper>

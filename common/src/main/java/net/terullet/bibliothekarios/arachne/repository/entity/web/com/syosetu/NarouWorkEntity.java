@@ -1,29 +1,27 @@
 package net.terullet.bibliothekarios.arachne.repository.entity.web.com.syosetu;
 
-import net.terullet.bibliothekarios.arachne.domain.Site;
+import net.terullet.bibliothekarios.arachne.repository.Site;
 import net.terullet.bibliothekarios.arachne.domain.web.com.syosetu.NarouGenre;
 import net.terullet.bibliothekarios.arachne.domain.web.com.syosetu.NarouWorkType;
 import net.terullet.bibliothekarios.arachne.repository.entity.WorkEntity;
 
 import java.time.LocalDateTime;
 
-public final class NarouWorkEntity implements WorkEntity {
+public abstract sealed class NarouWorkEntity implements WorkEntity permits NarouAllAgesWorkEntity, NarouR18WorkEntity {
 	private final long id;
 	private final Site site;
 	private final String ncode;
 	private final long narouId;
 	private final NarouWorkType workType;
-	private final NarouGenre genre;
 	private final String summary;
 	private final LocalDateTime registeredAt;
 
-	public NarouWorkEntity(long id, Site site, String ncode, long narouId, NarouWorkType workType, NarouGenre genre, String summary, LocalDateTime registeredAt) {
+	public NarouWorkEntity(long id, Site site, String ncode, long narouId, NarouWorkType workType, String summary, LocalDateTime registeredAt) {
 		this.id = id;
 		this.site = site;
 		this.ncode = ncode;
 		this.narouId = narouId;
 		this.workType = workType;
-		this.genre = genre;
 		this.summary = summary;
 		this.registeredAt = registeredAt;
 	}
@@ -43,9 +41,7 @@ public final class NarouWorkEntity implements WorkEntity {
 	public NarouWorkType getWorkType() {
 		return this.workType;
 	}
-	public NarouGenre getGenre() {
-		return this.genre;
-	}
+	public abstract NarouGenre getGenre();
 	public String getSummary() {
 		return this.summary;
 	}
