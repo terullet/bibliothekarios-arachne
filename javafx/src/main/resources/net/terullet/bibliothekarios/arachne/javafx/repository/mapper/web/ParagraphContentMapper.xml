@@ -15,10 +15,20 @@
     <select id="selectCurrentlyAliveParagraphContentsByEpisodeId"
             parameterType="long"
             resultMap="paragraphContentResultMap">
-        SELECT p.paragraph_id, p.order_number, pu.content
-        FROM paragraph_updates pu
-        INNER JOIN paragraphs p ON pu.paragraph_id = p.paragraph_id AND pu.episode_id = p.episode_id
-        LEFT JOIN paragraph_deletes pd ON pd.paragraph_id = pu.paragraph_id AND pd.episode_id = pu.episode_id
+        SELECT p.paragraph_id, p.order_number, pu_latest.content
+        FROM paragraphs p
+        INNER JOIN (
+            SELECT
+                pu.paragraph_id,
+                pu.content,
+                ROW_NUMBER() OVER (
+                    PARTITION BY pu.paragraph_id
+                    ORDER BY ep.posted_at DESC
+                ) AS rn
+            FROM paragraph_updates pu
+            INNER JOIN episode_posts ep ON pu.post_id = ep.post_id
+        ) pu_latest ON p.paragraph_id = pu_latest.paragraph_id AND pu_latest.rn = 1
+        LEFT JOIN paragraph_deletes pd ON pd.paragraph_id = p.paragraph_id
         WHERE p.episode_id = #{episodeId} AND pd.paragraph_id IS NULL
         ORDER BY p.order_number ASC
     </select>
