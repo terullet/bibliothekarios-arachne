@@ -1,10 +1,10 @@
 package net.terullet.bibliothekarios.arachne.repository.entity;
 
-public final class WorkListElementEntity {
+public final class WorkOverviewEntity {
 	private final long id;
 	private final String title;
 
-	public WorkListElementEntity(long id, String title) {
+	public WorkOverviewEntity(long id, String title) {
 		this.id = id;
 		this.title = title;
 	}
