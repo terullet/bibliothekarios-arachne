@@ -1,5 +1,10 @@
 package net.terullet.bibliothekarios.arachne.domain.web.com.syosetu;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 /**
  * 全年齢版なろうのジャンルを表す列挙型です．
  */
@@ -26,6 +31,8 @@ public enum NarouAllAgesGenre implements NarouGenre {
 	OTHERS(9999, "その他〔その他〕"),
 	NON_GENRE(9801, "ノンジャンル〔ノンジャンル〕");
 
+	private static final Map<Integer, NarouAllAgesGenre> ID_GENRE_MAP = Arrays.stream(NarouAllAgesGenre.values()).collect(Collectors.toMap(NarouAllAgesGenre::getId, Function.identity()));
+
 	private final int id;
 	@Override
 	public final int getId() {
@@ -41,13 +48,14 @@ public enum NarouAllAgesGenre implements NarouGenre {
 		this.description = description;
 	}
 
-	public static NarouAllAgesGenre valueOf(int id) {
-		for (var val : NarouAllAgesGenre.values()) {
-			if (id == val.getId()) return val;
+	public static NarouAllAgesGenre fromId(int id) {
+		NarouAllAgesGenre genre = ID_GENRE_MAP.get(id);
+		if (genre == null) {
+			throw new IllegalArgumentException(String.format("Invalid NarouAllAgesGenre ID: %d. Valid IDs are: %s", id, ID_GENRE_MAP.keySet()));
 		}
-		return null;
+		return genre;
 	}
 	public NarouAllAgesLargeGenre getLargeGenre() {
-		return NarouAllAgesLargeGenre.valueOf(this.id / 100);
+		return NarouAllAgesLargeGenre.fromId(this.id / 100);
 	}
 }
