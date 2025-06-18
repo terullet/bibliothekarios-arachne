@@ -65,7 +65,7 @@ public final class NarouAllAgesWorkResponseMetadata extends NarouWorkResponseMet
 				lastUpdatedAt,
 				numWeeklyReaders
 		);
-		this.genre = NarouAllAgesGenre.valueOf(genre);
+		this.genre = NarouAllAgesGenre.fromId(genre);
 	}
 
 	public NarouAllAgesGenre getGenre() {
