@@ -12,8 +12,8 @@ import java.util.List;
 public final class NarouAllAgesWorkEntity extends NarouWorkEntity {
 	private final NarouAllAgesGenre genre;
 
-	private NarouAllAgesWorkEntity(long id, String ncode, long narouId, UniverseOverviewEntity universe, List<ContributionInWorkEntity> contributions, NarouWorkType workType, NarouAllAgesGenre genre, String summary, LocalDateTime registeredAt) {
-		super(id, Site.NAROU_ALL_AGES, ncode, narouId, universe, contributions, workType, summary, registeredAt);
+	private NarouAllAgesWorkEntity(long id, String ncode, long narouId, String title, UniverseOverviewEntity universe, List<ContributionInWorkEntity> contributions, NarouWorkType workType, NarouAllAgesGenre genre, String summary, LocalDateTime registeredAt) {
+		super(id, Site.NAROU_ALL_AGES, ncode, narouId, title, universe, contributions, workType, summary, registeredAt);
 		this.genre = genre;
 	}
 
@@ -21,7 +21,7 @@ public final class NarouAllAgesWorkEntity extends NarouWorkEntity {
 		return this.genre;
 	}
 
-	public static class Factory extends NarouWorkEntity.Factory {
+	public static final class Factory extends NarouWorkEntity.Factory {
 		private NarouAllAgesGenre genre;
 
 		public final NarouAllAgesGenre getGenre() {
@@ -33,7 +33,7 @@ public final class NarouAllAgesWorkEntity extends NarouWorkEntity {
 
 		@Override
 		public NarouAllAgesWorkEntity build() {
-			return new NarouAllAgesWorkEntity(this.getId(), this.getNcode(), this.getNarouId(), this.getUniverse(), this.getContributions(), this.getWorkType(), this.getGenre(), this.getSummary(), this.getRegisteredAt());
+			return new NarouAllAgesWorkEntity(this.getId(), this.getNcode(), this.getNarouId(), this.getTitle(), this.getUniverse(), this.getContributions(), this.getWorkType(), this.getGenre(), this.getSummary(), this.getRegisteredAt());
 		}
 	}
 }
