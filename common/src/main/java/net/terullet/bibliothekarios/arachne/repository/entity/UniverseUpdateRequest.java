@@ -2,22 +2,22 @@ package net.terullet.bibliothekarios.arachne.repository.entity;
 
 public final class UniverseUpdateRequest {
 	private final long id;
-	private final String title;
-	private final String summary;
+	private final String newTitle;
+	private final String newSummary;
 
-	public UniverseUpdateRequest(long id, String title, String summary) {
+	public UniverseUpdateRequest(long id, String newTitle, String newSummary) {
 		this.id = id;
-		this.title = title;
-		this.summary = summary;
+		this.newTitle = newTitle;
+		this.newSummary = newSummary;
 	}
 
 	public long getId() {
 		return this.id;
 	}
-	public String getTitle() {
-		return this.title;
+	public String getNewTitle() {
+		return this.newTitle;
 	}
-	public String getSummary() {
-		return this.summary;
+	public String getNewSummary() {
+		return this.newSummary;
 	}
 }
