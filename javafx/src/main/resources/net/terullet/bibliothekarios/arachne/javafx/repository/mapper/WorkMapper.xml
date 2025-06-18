@@ -3,11 +3,33 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="net.terullet.bibliothekarios.arachne.repository.mapper.WorkMapper">
-    <resultMap id="multiWorksResultMap" type="net.terullet.bibliothekarios.arachne.repository.entity.WorkListElementEntity">
+    <resultMap id="multiWorksResultMap" type="net.terullet.bibliothekarios.arachne.repository.entity.WorkOverviewEntity">
         <constructor>
             <idArg name="id" column="work_id" javaType="_long" />
             <arg name="title" column="latest_title" javaType="string" />
         </constructor>
+    </resultMap>
+
+    <resultMap id="workResultMap" type="net.terullet.bibliothekarios.arachne.repository.entity.WorkEntity.Factory">
+        <id property="id" column="work_id" javaType="long" />
+        <result property="title" column="title" javaType="string" />
+        <result property="summary" column="summary" javaType="string" />
+        <result property="registeredAt" column="registered_at" />
+        <result property="site" column="site_id" typeHandler="net.terullet.bibliothekarios.arachne.repository.typehandler.SiteTypeHandler" />
+        <discriminator javaType="int">
+            <case value="1" resultType="net.terullet.bibliothekarios.arachne.repository.entity.web.com.syosetu.NarouAllAgesWorkEntity.Factory">
+                <result property="ncode" column="ncode" javaType="string" />
+                <result property="narouId" column="narou_id" javaType="_long" />
+                <result property="workType" column="work_type" typeHandler="net.terullet.bibliothekarios.arachne.repository.typehandler.web.com.syosetu.NarouWorkTypeTypeHandler" />
+                <result property="genre" column="genre_id" typeHandler="net.terullet.bibliothekarios.arachne.repository.typehandler.web.com.syosetu.NarouAllAgesGenreTypeHandler" />
+            </case>
+            <case value="2" resultType="net.terullet.bibliothekarios.arachne.repository.entity.web.com.syosetu.NarouR18WorkEntity.Factory">
+                <result property="ncode" column="ncode" javaType="string" />
+                <result property="narouId" column="narou_id" javaType="_long" />
+                <result property="workType" column="work_type" typeHandler="net.terullet.bibliothekarios.arachne.repository.typehandler.web.com.syosetu.NarouWorkTypeTypeHandler" />
+                <result property="genre" column="genre_id" typeHandler="net.terullet.bibliothekarios.arachne.repository.typehandler.web.com.syosetu.NarouR18GenreTypeHandler" />
+            </case>
+        </discriminator>
     </resultMap>
 
     <select id="selectAllWorks" resultMap="multiWorksResultMap">
