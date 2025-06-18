@@ -48,6 +48,7 @@ CREATE TABLE narou_works (
     work_id BIGINT PRIMARY KEY,
     ncode VARCHAR(12) UNIQUE NOT NULL,
     narou_id BIGINT UNIQUE NOT NULL,
+    work_type INT NOT NULL,
     genre_id INT NOT NULL,
     CONSTRAINT fk_narou_work FOREIGN KEY (work_id) REFERENCES works(work_id) ON UPDATE RESTRICT ON DELETE CASCADE
 );
