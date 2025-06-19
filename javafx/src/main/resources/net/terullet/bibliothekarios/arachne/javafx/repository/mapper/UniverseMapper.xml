@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper>
+    <resultMap id="universeResultMap" type="net.terullet.bibliothekarios.arachne.repository.entity.UniverseEntity">
+        <constructor>
+            <idArg name="id" column="universe_id" javaType="_long" />
+            <arg name="title" column="title" javaType="string" />
+            <arg name="summary" column="summary" javaType="string" />
+        </constructor>
+    </resultMap>
+
+    <resultMap id="universeOverviewResultMap" type="net.terullet.bibliothekarios.arachne.repository.entity.UniverseOverviewEntity">
+        <constructor>
+            <idArg name="id" column="universe_id" javaType="_long" />
+            <arg name="title" column="title" javaType="string" />
+        </constructor>
+    </resultMap>
+
+    <!-- TODO: selectUniverseById -->
+
+    <select id="selectUniverseByWorkId" resultMap="universeOverviewResultMap" parameterType="_long">
+        SELECT
+            u.universe_id,
+            u.title
+        FROM universes u
+        INNER JOIN work_universe_map wum ON u.universe_id = w.work_id
+        WHERE w.work_id = #{workId}
+    </select>
+
+    <insert id="insertUniverse" parameterType="net.terullet.bibliothekarios.arachne.repository.entity.UniverseCreationRequest" useGeneratedKeys="true" keyProperty="id" keyColumn="universe_id">
+        INSERT INTO universes VALUES (#{title}, #{summary})
+    </insert>
+
+    <update id="updateUniverse" parameterType="net.terullet.bibliothekarios.arachne.repository.entity.UniverseUpdateRequest">
+        UPDATE universes
+        SET
+            title = #{newTitle},
+            summary = #{newSummary}
+        WHERE universe_id = #{id}
+    </update>
+
+    <delete id="deleteUniverse" parameterType="_long">
+        DELETE FROM universes WHERE universe_id = #{id}
+    </delete>
+</mapper>

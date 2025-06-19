@@ -1,39 +1,27 @@
 package net.terullet.bibliothekarios.arachne.repository.entity.web.com.syosetu;
 
-import net.terullet.bibliothekarios.arachne.domain.Site;
+import net.terullet.bibliothekarios.arachne.repository.Site;
 import net.terullet.bibliothekarios.arachne.domain.web.com.syosetu.NarouGenre;
 import net.terullet.bibliothekarios.arachne.domain.web.com.syosetu.NarouWorkType;
+import net.terullet.bibliothekarios.arachne.repository.entity.ContributionInWorkEntity;
+import net.terullet.bibliothekarios.arachne.repository.entity.UniverseOverviewEntity;
 import net.terullet.bibliothekarios.arachne.repository.entity.WorkEntity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-public final class NarouWorkEntity implements WorkEntity {
-	private final long id;
-	private final Site site;
+public abstract sealed class NarouWorkEntity extends WorkEntity permits NarouAllAgesWorkEntity, NarouR18WorkEntity {
 	private final String ncode;
 	private final long narouId;
 	private final NarouWorkType workType;
-	private final NarouGenre genre;
-	private final String summary;
-	private final LocalDateTime registeredAt;
 
-	public NarouWorkEntity(long id, Site site, String ncode, long narouId, NarouWorkType workType, NarouGenre genre, String summary, LocalDateTime registeredAt) {
-		this.id = id;
-		this.site = site;
+	protected NarouWorkEntity(long id, Site site, String ncode, long narouId, String title, UniverseOverviewEntity universe, List<ContributionInWorkEntity> contributions, NarouWorkType workType, String summary, LocalDateTime registeredAt) {
+		super(id, site, title, universe, contributions, summary, registeredAt);
 		this.ncode = ncode;
 		this.narouId = narouId;
 		this.workType = workType;
-		this.genre = genre;
-		this.summary = summary;
-		this.registeredAt = registeredAt;
 	}
 
-	public long getId() {
-		return this.id;
-	}
-	public Site getSite() {
-		return this.site;
-	}
 	public String getNcode() {
 		return this.ncode;
 	}
@@ -43,13 +31,34 @@ public final class NarouWorkEntity implements WorkEntity {
 	public NarouWorkType getWorkType() {
 		return this.workType;
 	}
-	public NarouGenre getGenre() {
-		return this.genre;
-	}
-	public String getSummary() {
-		return this.summary;
-	}
-	public LocalDateTime getRegisteredAt() {
-		return this.registeredAt;
+	public abstract NarouGenre getGenre();
+
+	public static sealed class Factory extends WorkEntity.Factory permits NarouAllAgesWorkEntity.Factory, NarouR18WorkEntity.Factory {
+		private String ncode;
+		private long narouId;
+		private NarouWorkType workType;
+
+		@Override
+		public final void setSite(Site site) {
+			; // ignore setter
+		}
+		public final String getNcode() {
+			return this.ncode;
+		}
+		public final void setNcode(String ncode) {
+			this.ncode = ncode;
+		}
+		public final long getNarouId() {
+			return this.narouId;
+		}
+		public final void setNarouId(long narouId) {
+			this.narouId = narouId;
+		}
+		public final NarouWorkType getWorkType() {
+			return this.workType;
+		}
+		public final void setWorkType(NarouWorkType workType) {
+			this.workType = workType;
+		}
 	}
 }

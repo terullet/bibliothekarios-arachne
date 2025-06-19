@@ -27,12 +27,6 @@ package "Legend" as legend {
 ' ER diagrams
 ' ----------------------------------------------------------------
 
-RESOURCE(sites, "Site") {
-    + site_id : INT
-    --
-    * site_name : VARCHAR(256) <<UNIQUE>>
-}
-
 RESOURCE(universes, "Universe") {
     + universe_id : BIGINT
     --
@@ -43,11 +37,10 @@ RESOURCE(universes, "Universe") {
 RESOURCE(works, "Work") {
     + work_id : BIGINT
     --
-    # site_id : BIGINT
+    * site_id : INT
     * summary : CLOB
     * registered_at : TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP
 }
-FK(works, sites)
 
 MAP(works_universe_map, "Work-Universe") {
     + work_id : BIGINT
@@ -92,6 +85,7 @@ RESOURCE(narou_works, "NarouWork") {
     --
     * ncode : VARCHAR(12) <<UNIQUE>>
     * narou_id : BIGINT <<UNIQUE>>
+    * work_type : INT
     * genre_id : INT
 }
 FK(narou_works, works)
@@ -102,6 +96,7 @@ RESOURCE(episodes, "Episode") {
     # work_id : BIGINT
     * title : VARCHAR(256)
     * order_number : BIGINT
+    * first_posted_at : TIMESTAMP(0) WITH TIME ZONE
     --
     <<UNIQUE>> (work_id, order_number)
 }
@@ -132,7 +127,7 @@ FK(episode_posts, episodes)
 EVENT(episode_deletes, "Episode Delete") {
     + episode_id : BIGINT
     --
-    * deleted_at : TIMESTAMP(0) WITH TIME ZONE
+    * deleted_before : TIMESTAMP(0) WITH TIME ZONE
 }
 FK(episode_deletes, episodes)
 
@@ -228,19 +223,12 @@ MAP(works_user_tags_map, "Work-UserTag") {
 FK(works_user_tags_map, works)
 FK(works_user_tags_map, user_tags)
 
-RESOURCE(review_target_types, "ReviewTargetType") {
-    + type_id : INT
-    --
-    * type_name : VARCHAR(256) <<UNIQUE>>
-}
-
 EVENT(reviews, "Review") {
     + review_id : BIGINT
     --
-    # target_type : INT
+    * target_type : INT
     * registered_at : TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP
 }
-FK(reviews, review_target_types)
 
 RESOURCE(comments, "Comment") {
     + review_id : BIGINT
@@ -327,7 +315,7 @@ RESOURCE(hyperlinks, "Hyperlink") {
     + link_id : BIGINT
     --
     * link : VARCHAR(2048) <<UNIQUE>>
-    * link_name : VARCHAR(256)
+    * description : VARCHAR(256)
 }
 
 MAP(hyperlink_work_map, "Hyperlink-Work") {

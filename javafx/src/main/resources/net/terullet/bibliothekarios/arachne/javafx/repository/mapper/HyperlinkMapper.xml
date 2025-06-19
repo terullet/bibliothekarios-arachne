@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="net.terullet.bibliothekarios.arachne.repository.mapper.HyperlinkMapper">
+    <resultMap id="hyperlinkResultMap" type="net.terullet.bibliothekarios.arachne.repository.entity.HyperlinkEntity">
+        <id property="id" column="link_id" />
+        <result property="link" column="link" />
+        <result property="description" column="description" />
+    </resultMap>
+
+    <select id="selectHyperlinksByWorkId" resultMap="hyperlinkResultMap">
+        SELECT
+            hl.link_id as link_id,
+            hl.link as link,
+            hl.description as description
+        FROM hyperlink_work_map hwm
+        INNER JOIN hyperlinks hl ON hwm.link_id = hl.link_id
+        WHERE hwm.work_id = #{workId}
+    </select>
+
+    <select id="selectHyperlinksByContributorId" resultMap="hyperlinkResultMap">
+        SELECT
+            hl.link_id as link_id,
+            hl.link as link,
+            hl.description as description
+        FROM hyperlink_contributor_map hcm
+        INNER JOIN hyperlinks hl ON hcm.link_id = hl.link_id
+        WHERE hcm.contributor_id = #{contributorId}
+    </select>
+
+    <insert id="insertHyperlinks" useGeneratedKeys="true" keyProperty="id" keyColumn="link_id" parameterType="net.terullet.bibliothekarios.arachne.repository.entity.HyperlinkCreationRequest">
+        INSERT INTO hyperlinks (link, description) VALUES
+        <foreach collection="collection" item="item" separator=",">
+            (#{link}, #{description})
+        </foreach>
+    </insert>
+
+    <insert id="bindHyperlinkToWork" useGeneratedKeys="false" parameterType="net.terullet.bibliothekarios.arachne.repository.entity.HyperlinkWorkBindRequest">
+        INSERT INTO hyperlink_work_map (link_id, work_id) VALUES (#{linkId}, #{workId})
+    </insert>
+
+    <insert id="bindHyperlinkToContributor" useGeneratedKeys="false" parameterType="net.terullet.bibliothekarios.arachne.repository.entity.HyperlinkContributorBindRequest">
+        INSERT INTO hyperlink_contributor_map (link_id, contributor_id) VALUES (#{linkId}, #{contributorId})
+    </insert>
+
+    <update id="updateHyperlink" parameterType="net.terullet.bibliothekarios.arachne.repository.entity.HyperlinkEntity">
+        UPDATE hyperlinks
+        SET link = #{link}, description = #{description}
+        WHERE link_id = #{id}
+    </update>
+
+    <delete id="deleteHyperlink" parameterType="_long">
+        DELETE FROM hyperlinks WHERE link_id = #{id}
+    </delete>
+</mapper>

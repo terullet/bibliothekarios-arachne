@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.terullet.bibliothekarios.arachne.repository.mapper.WorkMapper">
+    <resultMap id="multiWorksResultMap" type="net.terullet.bibliothekarios.arachne.repository.entity.WorkOverviewEntity">
+        <constructor>
+            <idArg name="id" column="work_id" javaType="_long" />
+            <arg name="title" column="latest_title" javaType="string" />
+        </constructor>
+    </resultMap>
+
+    <resultMap id="workResultMap" type="net.terullet.bibliothekarios.arachne.repository.entity.WorkEntity.Factory">
+        <id property="id" column="work_id" javaType="long" />
+        <result property="title" column="title" javaType="string" />
+        <result property="summary" column="summary" javaType="string" />
+        <result property="registeredAt" column="registered_at" />
+        <result property="site" column="site_id" typeHandler="net.terullet.bibliothekarios.arachne.repository.typehandler.SiteTypeHandler" />
+        <discriminator javaType="int">
+            <case value="1" resultType="net.terullet.bibliothekarios.arachne.repository.entity.web.com.syosetu.NarouAllAgesWorkEntity.Factory">
+                <result property="ncode" column="ncode" javaType="string" />
+                <result property="narouId" column="narou_id" javaType="_long" />
+                <result property="workType" column="work_type" typeHandler="net.terullet.bibliothekarios.arachne.repository.typehandler.web.com.syosetu.NarouWorkTypeTypeHandler" />
+                <result property="genre" column="genre_id" typeHandler="net.terullet.bibliothekarios.arachne.repository.typehandler.web.com.syosetu.NarouAllAgesGenreTypeHandler" />
+            </case>
+            <case value="2" resultType="net.terullet.bibliothekarios.arachne.repository.entity.web.com.syosetu.NarouR18WorkEntity.Factory">
+                <result property="ncode" column="ncode" javaType="string" />
+                <result property="narouId" column="narou_id" javaType="_long" />
+                <result property="workType" column="work_type" typeHandler="net.terullet.bibliothekarios.arachne.repository.typehandler.web.com.syosetu.NarouWorkTypeTypeHandler" />
+                <result property="genre" column="genre_id" typeHandler="net.terullet.bibliothekarios.arachne.repository.typehandler.web.com.syosetu.NarouR18GenreTypeHandler" />
+            </case>
+        </discriminator>
+    </resultMap>
+
+    <select id="selectAllWorks" resultMap="multiWorksResultMap">
+        SELECT
+            w.work_id,
+            ranked.title as latest_title
+        FROM works w
+        INNER JOIN (
+            SELECT
+                work_id,
+                title,
+                ROW_NUMBER() OVER (PARTITION BY work_id ORDER BY updated_at DESC) as rn
+            FROM work_title_updates
+        ) ranked ON w.work_id = ranked.work_id AND ranked.rn = 1;
+    </select>
+
+    <select id="selectWorksByUniverseId" resultMap="multiWorksResultMap" parameterType="_long">
+        SELECT
+            work_id,
+            title as latest_title
+        FROM (
+            SELECT
+                work_id,
+                title,
+                ROW_NUMBER() OVER (PARTITION BY work_id ORDER BY updated_at DESC) as rn
+            FROM work_title_updates
+            WHERE work_id IN (
+                SELECT work_id
+                FROM work_universe_map
+                WHERE universe_id = #{universeId}
+            )
+        ) ranked
+        WHERE ranked.rn = 1;
+    </select>
+
+    <select id="selectWorkByWorkId" parameterType="_long" resultMap="workResultMap">
+        SELECT
+            w.work_id,
+            w.site_id,
+            latest_title.title,
+            w.summary,
+            w.registered_at,
+            nw.ncode,
+            nw.narou_id,
+            nw.work_type,
+            nw.genre_id
+        FROM works w
+        LEFT JOIN (
+            SELECT
+                work_id,
+                title,
+                ROW_NUMBER() OVER (PARTITION BY work_id ORDER BY updated_at DESC) as rn
+            FROM work_title_updates
+        ) latest_title ON w.work_id = latest_title.work_id AND latest_title.rn = 1
+        LEFT JOIN narou_works nw ON w.work_id = nw.work_id
+        WHERE w.work_id = #{workId}
+    </select>
+
+    <insert id="updateWorkTitle">
+        INSERT INTO work_title_updates (id, updated_at, title) VALUE (#{id}, #{updatedAt}, #{newTitle})
+    </insert>
+
+    <delete id="deleteWork">
+        DELETE FROM work_title_updates WHERE id = #{id}
+    </delete>
+</mapper>

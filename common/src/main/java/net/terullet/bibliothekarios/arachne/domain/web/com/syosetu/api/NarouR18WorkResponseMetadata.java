@@ -65,7 +65,7 @@ public final class NarouR18WorkResponseMetadata extends NarouWorkResponseMetadat
 				lastUpdatedAt,
 				numWeeklyReaders
 		);
-		this.genre = NarouR18Genre.valueOf(genre);
+		this.genre = NarouR18Genre.fromId(genre);
 	}
 
 	public NarouR18Genre getGenre() {
