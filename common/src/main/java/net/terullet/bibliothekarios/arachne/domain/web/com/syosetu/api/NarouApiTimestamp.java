@@ -28,7 +28,6 @@ public record NarouApiTimestamp(Constant constant, ZonedDateTime from, ZonedDate
 	public String toUrlEncoded(String prefix) {
 		if (this.constant() != NarouApiTimestamp.Constant.TIMESTAMP || this.from() != null || this.to() != null) {
 			StringBuilder sb = new StringBuilder(prefix);
-			sb.append("&lastupdate=");
 			if (this.constant() != NarouApiTimestamp.Constant.TIMESTAMP) {
 				sb.append(this.constant().getKey());
 			} else {
