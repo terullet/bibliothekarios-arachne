@@ -65,7 +65,28 @@
         WHERE ranked.rn = 1;
     </select>
 
-    <!-- TODO: selectWorkByWorkId -->
+    <select id="selectWorkByWorkId" parameterType="_long" resultMap="workResultMap">
+        SELECT
+            w.work_id,
+            w.site_id,
+            latest_title.title,
+            w.summary,
+            w.registered_at,
+            nw.ncode,
+            nw.narou_id,
+            nw.work_type,
+            nw.genre_id
+        FROM works w
+        LEFT JOIN (
+            SELECT
+                work_id,
+                title,
+                ROW_NUMBER() OVER (PARTITION BY work_id ORDER BY updated_at DESC) as rn
+            FROM work_title_updates
+        ) latest_title ON w.work_id = latest_title.work_id AND latest_title.rn = 1
+        LEFT JOIN narou_works nw ON w.work_id = nw.work_id
+        WHERE w.work_id = #{workId}
+    </select>
 
     <insert id="updateWorkTitle">
         INSERT INTO work_title_updates (id, updated_at, title) VALUE (#{id}, #{updatedAt}, #{newTitle})
