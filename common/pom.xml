@@ -6,7 +6,7 @@
     <parent>
         <groupId>net.terullet</groupId>
         <artifactId>bibliothekarios-arachne</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>0.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>bibliothekarios-arachne.common</artifactId>
