@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper>
+<mapper namespace="net.terullet.bibliothekarios.arachne.repository.mapper.web.EpisodeMapper">
     <resultMap id="episodeResultMap" type="net.terullet.bibliothekarios.arachne.repository.entity.web.EpisodeEntity">
         <id property="id" column="episode_id" />
         <result property="title" column="title" />
@@ -11,6 +11,39 @@
         <result property="lastUpdatedAt" column="last_posted_at" javaType="java.time.ZonedDateTime" />
         <result property="isDeleted" column="is_deleted" />
     </resultMap>
+
+    <resultMap id="episodeHistoryResultMap" type="net.terullet.bibliothekarios.arachne.repository.entity.web.EpisodeHistoryEntity">
+        <discriminator javaType="string" column="history_type">
+            <case value="UPDATE" resultType="net.terullet.bibliothekarios.arachne.repository.entity.web.EpisodeUpdateEntity">
+                <id property="postId" column="post_id" javaType="_long" />
+                <result property="episodeId" column="episode_id" javaType="_long" />
+                <result property="postedAt" column="event_timestamp" javaType="java.time.ZonedDateTime" />
+            </case>
+            <case value="DELETE" resultType="net.terullet.bibliothekarios.arachne.repository.entity.web.EpisodeDeleteEntity">
+                <id property="episodeId" column="episode_id" javaType="_long" />
+                <result property="deletedBefore" column="event_timestamp" javaType="java.time.ZonedDateTime" />
+            </case>
+        </discriminator>
+    </resultMap>
+
+    <select id="selectEpisodeHistoriesByEpisodeId" resultMap="episodeHistoryResultMap" parameterType="long">
+        SELECT 
+            'UPDATE' AS history_type,
+            ep.post_id,
+            ep.episode_id,
+            ep.posted_at AS event_timestamp
+        FROM episode_posts ep
+        WHERE ep.episode_id = #{episodeId}
+        UNION ALL
+        SELECT 
+            'DELETE' AS history_type,
+            NULL AS post_id,
+            ed.episode_id,
+            ed.deleted_before AS event_timestamp
+        FROM episode_deletes ed
+        WHERE ed.episode_id = #{episodeId}
+        ORDER BY event_timestamp ASC
+    </select>
 
     <select id="selectEpisodesByWorkId" resultMap="episodeResultMap">
         SELECT

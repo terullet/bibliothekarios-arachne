@@ -7,6 +7,7 @@ import java.util.Set;
 
 public interface EpisodeMapper {
 	List<EpisodeEntity> selectEpisodesByWorkId(long workId);
+	List<EpisodeHistoryEntity> selectEpisodeHistoriesByEpisodeId(long episodeId);
 	int insertEpisodes(Set<EpisodeCreationRequest> episodes);
 	int updateEpisodes(Set<EpisodePostRequest> episodes);
 	int updateEpisodeTitle(EpisodeTitleUpdateRequest episode);
