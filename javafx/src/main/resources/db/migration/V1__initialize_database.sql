@@ -7,10 +7,9 @@ CREATE TABLE universes (
 
 CREATE TABLE works (
     work_id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    site_id BIGINT NOT NULL,
+    site_id INT NOT NULL,
     summary CLOB NOT NULL,
-    registered_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    CONSTRAINT fk_work_site FOREIGN KEY (site_id) REFERENCES sites(site_id) ON UPDATE RESTRICT ON DELETE RESTRICT
+    registered_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
 );
 
 CREATE TABLE works_universe_map (
@@ -58,6 +57,7 @@ CREATE TABLE episodes (
     work_id BIGINT NOT NULL,
     title VARCHAR(256) NOT NULL,
     order_number BIGINT NOT NULL,
+    first_posted_at TIMESTAMP(0) WITH TIME ZONE NOT NULL,
     CONSTRAINT uq_episode_order UNIQUE (work_id, order_number),
     CONSTRAINT fk_episode_work FOREIGN KEY (work_id) REFERENCES works(work_id) ON UPDATE RESTRICT ON DELETE CASCADE
 );
@@ -72,7 +72,7 @@ CREATE TABLE episode_posts (
 
 CREATE TABLE episode_deletes (
     episode_id BIGINT PRIMARY KEY,
-    deleted_at TIMESTAMP(0) WITH TIME ZONE NOT NULL,
+    deleted_before TIMESTAMP(0) WITH TIME ZONE NOT NULL,
     CONSTRAINT fk_delete_episode FOREIGN KEY (episode_id) REFERENCES episodes(episode_id) ON UPDATE RESTRICT ON DELETE CASCADE
 );
 
@@ -128,7 +128,6 @@ CREATE TABLE contributions (
     type_id INT NOT NULL,
     CONSTRAINT pk_contribution PRIMARY KEY (work_id, contributor_id, type_id),
     CONSTRAINT fk_contribution_work FOREIGN KEY (work_id) REFERENCES works(work_id) ON UPDATE RESTRICT ON DELETE CASCADE,
-    CONSTRAINT fk_contribution_contributor FOREIGN KEY (contributor_id) REFERENCES contributors_sites(contributor_id) ON UPDATE RESTRICT ON DELETE RESTRICT,
     CONSTRAINT fk_contribution_contribution_type FOREIGN KEY (type_id) REFERENCES contribution_types(type_id) ON UPDATE RESTRICT ON DELETE RESTRICT
 );
 
@@ -167,8 +166,7 @@ CREATE TABLE works_user_tags_map (
 CREATE TABLE reviews (
     review_id BIGINT AUTO_INCREMENT PRIMARY KEY,
     target_type INT NOT NULL,
-    registered_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_review_target_type FOREIGN KEY (target_type) REFERENCES review_target_types(type_id) ON UPDATE RESTRICT ON DELETE RESTRICT
+    registered_at TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE comments (

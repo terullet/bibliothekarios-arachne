@@ -85,6 +85,7 @@ RESOURCE(narou_works, "NarouWork") {
     --
     * ncode : VARCHAR(12) <<UNIQUE>>
     * narou_id : BIGINT <<UNIQUE>>
+    * work_type : INT
     * genre_id : INT
 }
 FK(narou_works, works)
@@ -95,6 +96,7 @@ RESOURCE(episodes, "Episode") {
     # work_id : BIGINT
     * title : VARCHAR(256)
     * order_number : BIGINT
+    * first_posted_at : TIMESTAMP(0) WITH TIME ZONE
     --
     <<UNIQUE>> (work_id, order_number)
 }
@@ -125,7 +127,7 @@ FK(episode_posts, episodes)
 EVENT(episode_deletes, "Episode Delete") {
     + episode_id : BIGINT
     --
-    * deleted_at : TIMESTAMP(0) WITH TIME ZONE
+    * deleted_before : TIMESTAMP(0) WITH TIME ZONE
 }
 FK(episode_deletes, episodes)
 
@@ -313,7 +315,7 @@ RESOURCE(hyperlinks, "Hyperlink") {
     + link_id : BIGINT
     --
     * link : VARCHAR(2048) <<UNIQUE>>
-    * link_name : VARCHAR(256)
+    * description : VARCHAR(256)
 }
 
 MAP(hyperlink_work_map, "Hyperlink-Work") {
