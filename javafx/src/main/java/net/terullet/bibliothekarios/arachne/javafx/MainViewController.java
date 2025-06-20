@@ -13,13 +13,9 @@ public class MainViewController {
 	@FXML
 	private Pane mainPane;
 	@FXML
-	private TabPane listsTab;
+	private TabPane tabsPane;
 	@FXML
-	private TabPane contentsTab;
-	@FXML
-	private Tab workListTab;
-	@FXML
-	private Tab episodeListTab;
+	private Tab workTab;
 
 	@FXML
 	public void initialize() {
