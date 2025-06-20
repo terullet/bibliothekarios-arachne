@@ -1,4 +1,4 @@
-package net.terullet.bibliothekarios.arachne.domain.web.com.syosetu.api;
+package net.terullet.bibliothekarios.arachne.service.web.com.syosetu.api;
 
 import javafx.util.Pair;
 import net.terullet.bibliothekarios.arachne.domain.RequestSource;

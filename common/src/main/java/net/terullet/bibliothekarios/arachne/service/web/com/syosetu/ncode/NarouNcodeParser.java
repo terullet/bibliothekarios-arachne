@@ -1,5 +1,9 @@
-package net.terullet.bibliothekarios.arachne.domain.web.com.syosetu.ncode;
+package net.terullet.bibliothekarios.arachne.service.web.com.syosetu.ncode;
 
+import net.terullet.bibliothekarios.arachne.domain.AccessRestrictedException;
+import net.terullet.bibliothekarios.arachne.domain.AuthenticationRequiredException;
+import net.terullet.bibliothekarios.arachne.domain.ContentNotFoundException;
+import net.terullet.bibliothekarios.arachne.domain.HttpEncoding;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jsoup.Jsoup;

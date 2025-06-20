@@ -1,4 +1,4 @@
-package net.terullet.bibliothekarios.arachne.domain.web.com.syosetu.api;
+package net.terullet.bibliothekarios.arachne.service.web.com.syosetu.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;

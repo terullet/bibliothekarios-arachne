@@ -1,4 +1,4 @@
-package net.terullet.bibliothekarios.arachne.domain.web.com.syosetu.ncode;
+package net.terullet.bibliothekarios.arachne.service.web.com.syosetu.ncode;
 
 import net.terullet.bibliothekarios.arachne.domain.web.com.syosetu.NarouWorkType;
 

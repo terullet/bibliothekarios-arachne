@@ -1,5 +1,7 @@
-package net.terullet.bibliothekarios.arachne.domain.web.com.syosetu.ncode;
+package net.terullet.bibliothekarios.arachne.service.web.com.syosetu.ncode;
 
+import net.terullet.bibliothekarios.arachne.domain.AccessRestrictedException;
+import net.terullet.bibliothekarios.arachne.domain.ExhaustedRetryException;
 import net.terullet.bibliothekarios.arachne.domain.RequestSource;
 import net.terullet.bibliothekarios.arachne.domain.RequestStatus;
 import net.terullet.util.concurrent.NamedThreadFactory;

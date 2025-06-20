@@ -1,4 +1,4 @@
-package net.terullet.bibliothekarios.arachne.domain.web.com.syosetu.api;
+package net.terullet.bibliothekarios.arachne.service.web.com.syosetu.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import net.terullet.bibliothekarios.arachne.domain.web.com.syosetu.NarouR18Genre;
