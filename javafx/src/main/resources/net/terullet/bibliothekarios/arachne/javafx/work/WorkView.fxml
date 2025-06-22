@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
 <SplitPane xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="net.terullet.bibliothekarios.arachne.javafx.work.WorkViewController"
+           stylesheets="@../style.css"
            prefHeight="400.0" prefWidth="600.0">
 
     <BorderPane>
@@ -18,6 +16,9 @@
                     <!-- add work button -->
                     <Button text="&#xff0b;" />
                 </right>
+                <center>
+                    <Label text="小説一覧" alignment="BASELINE_CENTER" />
+                </center>
             </BorderPane>
         </top>
 
@@ -26,7 +27,7 @@
                 <!-- list of works -->
                 <ListView fx:id="workListView" />
 
-                <Label fx:id="workListEmptyLabel" text="&#xff0b;ボタンから作品を追加してください" alignment="CENTER" textAlignment="CENTER" wrapText="true" />
+                <Label fx:id="workListEmptyLabel" styleClass="prompt-label" text="&#xff0b;ボタンから作品を追加してください" alignment="CENTER" textAlignment="CENTER" wrapText="true" />
             </StackPane>
         </center>
     </BorderPane>
@@ -40,7 +41,7 @@
             <StackPane>
                 <!-- detail information -->
 
-                <Label fx:id="workDetailEmptyLabel" text="作品を選択すると詳細が表示されます" alignment="CENTER" textAlignment="CENTER" wrapText="true" />
+                <Label fx:id="workDetailEmptyLabel" styleClass="prompt-label" text="作品を選択すると詳細が表示されます" alignment="CENTER" textAlignment="CENTER" wrapText="true" />
             </StackPane>
         </center>
     </BorderPane>

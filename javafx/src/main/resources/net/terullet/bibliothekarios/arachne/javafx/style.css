@@ -2,3 +2,7 @@
     -fx-max-height: 0;
     -fx-pref-height: 0;
 }
+
+.prompt-label {
+    -fx-text-fill: #777;
+}
