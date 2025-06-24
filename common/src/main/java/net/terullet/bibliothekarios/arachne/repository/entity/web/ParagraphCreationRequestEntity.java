@@ -1,13 +1,13 @@
 package net.terullet.bibliothekarios.arachne.repository.entity.web;
 
-public final class ParagraphCreationRequest {
+public final class ParagraphCreationRequestEntity {
 	private Long id;
 	private final long episodeId;
 	private final long orderNumber;
 	private final long postId;
 	private final String content;
 
-	public ParagraphCreationRequest(long episodeId, long orderNumber, long postId, String content) {
+	public ParagraphCreationRequestEntity(long episodeId, long orderNumber, long postId, String content) {
 		this.episodeId = episodeId;
 		this.orderNumber = orderNumber;
 		this.postId = postId;

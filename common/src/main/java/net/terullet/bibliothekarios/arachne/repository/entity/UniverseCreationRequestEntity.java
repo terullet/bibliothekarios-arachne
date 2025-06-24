@@ -1,11 +1,11 @@
 package net.terullet.bibliothekarios.arachne.repository.entity;
 
-public final class UniverseCreationRequest {
+public final class UniverseCreationRequestEntity {
 	private Long id;
 	private final String title;
 	private final String summary;
 
-	public UniverseCreationRequest(String title, String summary) {
+	public UniverseCreationRequestEntity(String title, String summary) {
 		this.title = title;
 		this.summary = summary;
 	}

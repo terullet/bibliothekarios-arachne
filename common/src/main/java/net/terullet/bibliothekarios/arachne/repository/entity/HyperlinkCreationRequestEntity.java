@@ -2,12 +2,12 @@ package net.terullet.bibliothekarios.arachne.repository.entity;
 
 import java.net.URL;
 
-public class HyperlinkCreationRequest {
+public class HyperlinkCreationRequestEntity {
 	private Long id;
 	private final URL link;
 	private final String description;
 
-	public HyperlinkCreationRequest(URL link, String description) {
+	public HyperlinkCreationRequestEntity(URL link, String description) {
 		this.link = link;
 		this.description = description;
 	}
