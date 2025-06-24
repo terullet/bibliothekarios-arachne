@@ -1,10 +1,14 @@
 package net.terullet.util.concurrent;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 public class SimpleObservable<T> implements WritableObservable<T> {
+	private static final Logger logger = LogManager.getLogger(SimpleObservable.class);
 	private T value;
 	private final Object valueSyncObj = new Object();
 	private final Set<Observer<T>> observers = new HashSet<>();
@@ -29,7 +33,7 @@ public class SimpleObservable<T> implements WritableObservable<T> {
 						try {
 							l.onChanged(value);
 						} catch (Exception e) {
-							// Ignore exception to continue notifying.
+							logger.warn("Failed while notifying update to observers.", e);
 						}
 					}
 				}
