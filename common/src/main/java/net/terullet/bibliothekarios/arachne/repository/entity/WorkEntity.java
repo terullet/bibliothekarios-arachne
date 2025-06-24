@@ -9,17 +9,18 @@ import java.util.List;
 public class WorkEntity {
 	private final long id;
 	private final Site site;
-	private final String title;
 	private final UniverseOverviewEntity universe;
+	private final List<WorkTitleUpdateEntity> titleUpdates;
 	private final List<ContributionInWorkEntity> contributions;
 	private final String summary;
 	private final LocalDateTime registeredAt;
 
-	protected WorkEntity(long id, Site site, String title, UniverseOverviewEntity universe, List<ContributionInWorkEntity> contributions, String summary, LocalDateTime registeredAt) {
+	protected WorkEntity(long id, Site site, UniverseOverviewEntity universe, List<WorkTitleUpdateEntity> titleUpdates, List<ContributionInWorkEntity> contributions, String summary, LocalDateTime registeredAt) {
 		this.id = id;
 		this.site = site;
-		this.title = title;
-		this.universe = universe; this.contributions = Collections.unmodifiableList(contributions);
+		this.universe = universe;
+		this.titleUpdates = Collections.unmodifiableList(titleUpdates);
+		this.contributions = Collections.unmodifiableList(contributions);
 		this.summary = summary;
 		this.registeredAt = registeredAt;
 	}
@@ -30,11 +31,11 @@ public class WorkEntity {
 	public final Site getSite() {
 		return this.site;
 	}
-	public final String getTitle() {
-		return this.title;
-	}
 	public final UniverseOverviewEntity getUniverse() {
 		return this.universe;
+	}
+	public final List<WorkTitleUpdateEntity> getTitleUpdates() {
+		return this.titleUpdates;
 	}
 	public final List<ContributionInWorkEntity> getContributions() {
 		return this.contributions;
@@ -49,8 +50,8 @@ public class WorkEntity {
 	public static class Factory {
 		private Long id;
 		private Site site;
-		private String title;
 		private UniverseOverviewEntity universe;
+		private List<WorkTitleUpdateEntity> titleUpdates;
 		private List<ContributionInWorkEntity> contributions;
 		private String summary;
 		private LocalDateTime registeredAt;
@@ -67,14 +68,14 @@ public class WorkEntity {
 		public void setSite(Site site) {
 			this.site = site;
 		}
-		public final String getTitle() {
-			return this.title;
-		}
-		public final void setTitle(String title) {
-			this.title = title;
-		}
 		public final UniverseOverviewEntity getUniverse() {
 			return this.universe;
+		}
+		public final List<WorkTitleUpdateEntity> getTitleUpdates() {
+			return this.titleUpdates;
+		}
+		public final void setTitleUpdates(List<WorkTitleUpdateEntity> titleUpdates) {
+			this.titleUpdates = titleUpdates;
 		}
 		public final void setUniverse(UniverseOverviewEntity universe) {
 			this.universe = universe;
@@ -98,7 +99,7 @@ public class WorkEntity {
 			this.registeredAt = registeredAt;
 		}
 		public WorkEntity build() {
-			return new WorkEntity(this.getId(), this.getSite(), this.getTitle(), this.getUniverse(), this.getContributions(), this.getSummary(), this.getRegisteredAt());
+			return new WorkEntity(this.getId(), this.getSite(), this.getUniverse(), this.getTitleUpdates(), this.getContributions(), this.getSummary(), this.getRegisteredAt());
 		}
 	}
 }

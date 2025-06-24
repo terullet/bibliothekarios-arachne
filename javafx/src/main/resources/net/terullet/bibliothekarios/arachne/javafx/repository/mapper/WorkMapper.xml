@@ -26,12 +26,20 @@
         <collection property="contributionTypes" resultMap="contributionTypeResultMap" />
     </resultMap>
 
+    <resultMap id="workTitleUpdateResultMap" type="net.terullet.bibliothekarios.arachne.repository.entity.WorkTitleUpdateEntity">
+        <constructor>
+            <idArg name="workId" column="work_id" javaType="_long" />
+            <arg name="title" column="title" javaType="string" />
+            <arg name="updatedAt" column="updated_at" javaType="java.time.ZonedDateTime" />
+        </constructor>
+    </resultMap>
+
     <resultMap id="workResultMap" type="net.terullet.bibliothekarios.arachne.repository.entity.WorkEntity.Factory">
         <id property="id" column="work_id" javaType="long" />
-        <result property="title" column="title" javaType="string" />
         <result property="summary" column="summary" javaType="string" />
         <result property="registeredAt" column="registered_at" />
         <result property="site" column="site_id" typeHandler="net.terullet.bibliothekarios.arachne.repository.typehandler.SiteTypeHandler" />
+        <collection property="titleUpdates" resultMap="workTitleUpdateResultMap" />
         <collection property="contributions" resultMap="contributionInWorkResultMap" />
         <discriminator javaType="int">
             <case value="1" resultType="net.terullet.bibliothekarios.arachne.repository.entity.web.com.syosetu.NarouAllAgesWorkEntity.Factory">
@@ -86,7 +94,8 @@
         SELECT
             w.work_id,
             w.site_id,
-            latest_title.title,
+            wtu.title,
+            wtu.updated_at,
             w.summary,
             w.registered_at,
             nw.ncode,
@@ -98,18 +107,13 @@
             ct.type_id,
             ct.type_name
         FROM works w
-        LEFT JOIN (
-            SELECT
-                work_id,
-                title,
-                ROW_NUMBER() OVER (PARTITION BY work_id ORDER BY updated_at DESC) as rn
-            FROM work_title_updates
-        ) latest_title ON w.work_id = latest_title.work_id AND latest_title.rn = 1
+        LEFT JOIN work_title_updates wtu ON w.work_id = wtu.work_id
         LEFT JOIN narou_works nw ON w.work_id = nw.work_id
         LEFT JOIN contributions c ON w.work_id = c.work_id
         LEFT JOIN contributors contrib ON c.contributor_id = contrib.contributor_id
         LEFT JOIN contribution_types ct ON c.type_id = ct.type_id
         WHERE w.work_id = #{workId}
+        ORDER BY wtu.updated_at DESC
     </select>
 
     <insert id="insertWork" parameterType="net.terullet.bibliothekarios.arachne.repository.entity.WorkCreationRequestEntity">
