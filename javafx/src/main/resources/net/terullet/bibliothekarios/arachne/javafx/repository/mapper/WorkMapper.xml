@@ -112,11 +112,15 @@
         WHERE w.work_id = #{workId}
     </select>
 
-    <insert id="updateWorkTitle">
+    <insert id="insertWork" parameterType="net.terullet.bibliothekarios.arachne.repository.entity.WorkCreationRequestEntity">
+        INSERT INTO works (site_id, summary) VALUE (#{site}, #{summary})
+    </insert>
+
+    <insert id="updateWorkTitle" parameterType="net.terullet.bibliothekarios.arachne.repository.entity.WorkTitleUpdateRequestEntity">
         INSERT INTO work_title_updates (id, updated_at, title) VALUE (#{id}, #{updatedAt}, #{newTitle})
     </insert>
 
-    <delete id="deleteWork">
+    <delete id="deleteWork" parameterType="_long">
         DELETE FROM work_title_updates WHERE id = #{id}
     </delete>
 </mapper>
