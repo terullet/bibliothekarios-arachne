@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 毎分設定（log4j2.xml）を確認し，適用しなおす -->
+<Configuration status="INFO" monitorInterval="60000">
+    <Properties>
+        <Property name="log-path">.logs</Property>
+    </Properties>
+
+    <Appenders>
+        <!-- Console Appender with Separate Output -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <!-- INFO以下のログを標準出力へ出力する -->
+            <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="ACCEPT"/>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+
+        <Console name="ErrorConsole" target="SYSTEM_ERR">
+            <!-- WARN以上のログを標準エラー出力へ出力する -->
+            <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+
+        <!-- RollingFile Appender with Date and 8-hour-based Rotation -->
+        <RollingFile name="RollingFile" fileName="${log-path}/app.log"
+                     filePattern="${log-path}/app-%d{yyyy-MM-dd-HH}-%i.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <!-- 日付と8時間ごとのローテーション -->
+                <TimeBasedTriggeringPolicy interval="8"/>
+                <!-- ファイルサイズが指定サイズを超えた場合のローテーション -->
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+            <!-- 生成されるファイルの最大数 -->
+            <DefaultRolloverStrategy max="32"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <!-- Root Logger -->
+        <Root level="all">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="ErrorConsole"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+</Configuration>

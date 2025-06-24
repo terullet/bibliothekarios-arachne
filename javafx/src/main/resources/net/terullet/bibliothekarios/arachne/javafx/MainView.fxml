@@ -5,7 +5,6 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="net.terullet.bibliothekarios.arachne.javafx.MainViewController"
             fx:id="mainPane"
             stylesheets="@style.css"
             prefHeight="450.0" prefWidth="800.0">
@@ -14,20 +13,12 @@
     </bottom>
 
     <center>
-        <SplitPane dividerPositions="0.3">
-            <!-- List works / episodes -->
-            <TabPane fx:id="listsTab" minWidth="180" tabClosingPolicy="UNAVAILABLE" styleClass="hidden-tab-pane">
-                <Tab fx:id="workListTab">
-                    <fx:include fx:id="workList" source="works/WorkListView.fxml" />
-                </Tab>
-                <Tab fx:id="episodeListTab">
-                    <fx:include fx:id="episodeList" source="episodes/EpisodeListView.fxml" />
-                </Tab>
-            </TabPane>
-            <!-- show details / show body -->
-            <TabPane fx:id="contentsTab" styleClass="hidden-tab-pane">
-            </TabPane>
-        </SplitPane>
+        <TabPane fx:id="tabsPane" styleClass="hidden-tab-pane" tabClosingPolicy="UNAVAILABLE">
+            <Tab fx:id="workListTab" />
+            <Tab fx:id="episodeListTab" />
+            <Tab fx:id="workExplorationTab" />
+            <Tab fx:id="configurationTab" />
+        </TabPane>
     </center>
 
 </BorderPane>
