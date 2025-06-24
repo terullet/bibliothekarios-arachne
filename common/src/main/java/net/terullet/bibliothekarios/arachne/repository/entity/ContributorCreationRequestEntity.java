@@ -1,10 +1,10 @@
 package net.terullet.bibliothekarios.arachne.repository.entity;
 
-public final class ContributorCreationRequest {
+public final class ContributorCreationRequestEntity {
 	private Long id;
 	private final String handleName;
 
-	public ContributorCreationRequest(String handleName) {
+	public ContributorCreationRequestEntity(String handleName) {
 		this.handleName = handleName;
 	}
 

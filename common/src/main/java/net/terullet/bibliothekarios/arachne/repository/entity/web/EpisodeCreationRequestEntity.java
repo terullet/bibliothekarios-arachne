@@ -2,14 +2,14 @@ package net.terullet.bibliothekarios.arachne.repository.entity.web;
 
 import java.time.ZonedDateTime;
 
-public final class EpisodeCreationRequest {
+public final class EpisodeCreationRequestEntity {
 	private Long id;
 	private final long workId;
 	private final String title;
 	private final int orderNumber;
 	private final ZonedDateTime firstPostedAt;
 
-	public EpisodeCreationRequest(long workId, int orderNumber, String title, ZonedDateTime firstPostedAt, ZonedDateTime postedAt) {
+	public EpisodeCreationRequestEntity(long workId, int orderNumber, String title, ZonedDateTime firstPostedAt, ZonedDateTime postedAt) {
 		this.workId = workId;
 		this.orderNumber = orderNumber;
 		this.title = title;

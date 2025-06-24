@@ -2,12 +2,12 @@ package net.terullet.bibliothekarios.arachne.repository.entity;
 
 import java.time.ZonedDateTime;
 
-public final class WorkTitleUpdateRequest {
+public final class WorkTitleUpdateRequestEntity {
 	private final long id;
 	private final String newTitle;
 	private final ZonedDateTime updatedAt;
 
-	public WorkTitleUpdateRequest(long id, String newTitle, ZonedDateTime updatedAt) {
+	public WorkTitleUpdateRequestEntity(long id, String newTitle, ZonedDateTime updatedAt) {
 		this.id = id;
 		this.newTitle = newTitle;
 		this.updatedAt = updatedAt;
