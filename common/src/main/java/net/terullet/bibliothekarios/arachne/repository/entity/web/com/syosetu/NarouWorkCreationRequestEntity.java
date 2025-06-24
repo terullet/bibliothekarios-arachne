@@ -5,7 +5,7 @@ import net.terullet.bibliothekarios.arachne.domain.web.com.syosetu.NarouWorkType
 
 import java.time.LocalDateTime;
 
-public final class NarouWorkCreationRequest {
+public final class NarouWorkCreationRequestEntity {
 	private Long id;
 	private final String ncode;
 	private final long narouId;
@@ -50,7 +50,7 @@ public final class NarouWorkCreationRequest {
 		this.registeredAt = registeredAt;
 	}
 
-	public NarouWorkCreationRequest(String ncode, long narouId, NarouWorkType workType, NarouGenre genre, String summary) {
+	public NarouWorkCreationRequestEntity(String ncode, long narouId, NarouWorkType workType, NarouGenre genre, String summary) {
 		this.ncode = ncode;
 		this.narouId = narouId;
 		this.workType = workType;

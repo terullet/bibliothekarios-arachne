@@ -2,12 +2,12 @@ package net.terullet.bibliothekarios.arachne.repository.entity.web.com.syosetu;
 
 import net.terullet.bibliothekarios.arachne.domain.web.com.syosetu.NarouGenre;
 
-public final class NarouWorkUpdateRequest {
+public final class NarouWorkUpdateRequestEntity {
 	private final long id;
 	private final NarouGenre genre;
 	private final String summary;
 
-	public NarouWorkUpdateRequest(long id, NarouGenre genre, String summary) {
+	public NarouWorkUpdateRequestEntity(long id, NarouGenre genre, String summary) {
 		this.id = id;
 		this.genre = genre;
 		this.summary = summary;
