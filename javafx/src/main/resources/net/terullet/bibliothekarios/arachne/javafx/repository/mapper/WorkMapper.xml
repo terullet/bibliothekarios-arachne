@@ -10,12 +10,29 @@
         </constructor>
     </resultMap>
 
+    <resultMap id="contributionTypeResultMap" type="net.terullet.bibliothekarios.arachne.repository.entity.ContributionTypeEntity">
+        <constructor>
+            <idArg name="typeId" column="type_id" javaType="_int" />
+            <arg name="typeName" column="type_name" javaType="string" />
+        </constructor>
+    </resultMap>
+
+    <resultMap id="contributionInWorkResultMap" type="net.terullet.bibliothekarios.arachne.repository.entity.ContributionInWorkEntity">
+        <constructor>
+            <idArg name="contributorId" column="contributor_id" javaType="_long" />
+            <arg name="handleName" column="handle_name" javaType="string" />
+            <arg name="contributionTypes" javaType="java.util.List" />
+        </constructor>
+        <collection property="contributionTypes" resultMap="contributionTypeResultMap" />
+    </resultMap>
+
     <resultMap id="workResultMap" type="net.terullet.bibliothekarios.arachne.repository.entity.WorkEntity.Factory">
         <id property="id" column="work_id" javaType="long" />
         <result property="title" column="title" javaType="string" />
         <result property="summary" column="summary" javaType="string" />
         <result property="registeredAt" column="registered_at" />
         <result property="site" column="site_id" typeHandler="net.terullet.bibliothekarios.arachne.repository.typehandler.SiteTypeHandler" />
+        <collection property="contributions" resultMap="contributionInWorkResultMap" />
         <discriminator javaType="int">
             <case value="1" resultType="net.terullet.bibliothekarios.arachne.repository.entity.web.com.syosetu.NarouAllAgesWorkEntity.Factory">
                 <result property="ncode" column="ncode" javaType="string" />
@@ -75,7 +92,11 @@
             nw.ncode,
             nw.narou_id,
             nw.work_type,
-            nw.genre_id
+            nw.genre_id,
+            contrib.contributor_id,
+            contrib.handle_name,
+            ct.type_id,
+            ct.type_name
         FROM works w
         LEFT JOIN (
             SELECT
@@ -85,6 +106,9 @@
             FROM work_title_updates
         ) latest_title ON w.work_id = latest_title.work_id AND latest_title.rn = 1
         LEFT JOIN narou_works nw ON w.work_id = nw.work_id
+        LEFT JOIN contributions c ON w.work_id = c.work_id
+        LEFT JOIN contributors contrib ON c.contributor_id = contrib.contributor_id
+        LEFT JOIN contribution_types ct ON c.type_id = ct.type_id
         WHERE w.work_id = #{workId}
     </select>
 

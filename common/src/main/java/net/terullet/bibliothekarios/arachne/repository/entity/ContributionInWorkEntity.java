@@ -1,16 +1,17 @@
 package net.terullet.bibliothekarios.arachne.repository.entity;
 
+import java.util.Collections;
+import java.util.List;
+
 public class ContributionInWorkEntity {
 	private final long contributorId;
 	private final String handleName;
-	private final int contributionTypeId;
-	private final String typeName;
+	private final List<ContributionTypeEntity> contributionTypes;
 
-	public ContributionInWorkEntity(long contributorId, String handleName, int contributionTypeId, String typeName) {
+	public ContributionInWorkEntity(long contributorId, String handleName, List<ContributionTypeEntity> contributionTypes) {
 		this.contributorId = contributorId;
 		this.handleName = handleName;
-		this.contributionTypeId = contributionTypeId;
-		this.typeName = typeName;
+		this.contributionTypes = Collections.unmodifiableList(contributionTypes);
 	}
 
 	public long getContributorId() {
@@ -19,10 +20,7 @@ public class ContributionInWorkEntity {
 	public String getHandleName() {
 		return this.handleName;
 	}
-	public int getContributionTypeId() {
-		return this.contributionTypeId;
-	}
-	public String getTypeName() {
-		return this.typeName;
+	public List<ContributionTypeEntity> getContributionTypes() {
+		return this.contributionTypes;
 	}
 }
