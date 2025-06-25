@@ -4,6 +4,7 @@ import net.terullet.bibliothekarios.arachne.domain.web.com.syosetu.NarouGenre;
 import net.terullet.bibliothekarios.arachne.domain.web.com.syosetu.NarouWorkType;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public final class NarouWorkCreationRequestEntity {
 	private final long workId;
@@ -11,6 +12,7 @@ public final class NarouWorkCreationRequestEntity {
 	private final long narouId;
 	private final NarouWorkType workType;
 	private final NarouGenre genre;
+	private final ZonedDateTime firstPostedAt;
 
 	public long getWorkId() {
 		return this.workId;
@@ -32,11 +34,16 @@ public final class NarouWorkCreationRequestEntity {
 		return this.genre;
 	}
 
-	public NarouWorkCreationRequestEntity(long workId, String ncode, long narouId, NarouWorkType workType, NarouGenre genre) {
+	public ZonedDateTime getFirstPostedAt() {
+		return this.firstPostedAt;
+	}
+
+	public NarouWorkCreationRequestEntity(long workId, String ncode, long narouId, NarouWorkType workType, NarouGenre genre, ZonedDateTime firstPostedAt) {
 		this.workId = workId;
 		this.ncode = ncode;
 		this.narouId = narouId;
 		this.workType = workType;
 		this.genre = genre;
+		this.firstPostedAt = firstPostedAt;
 	}
 }

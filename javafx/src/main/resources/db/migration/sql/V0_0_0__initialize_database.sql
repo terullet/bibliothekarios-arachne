@@ -33,6 +33,7 @@ CREATE TABLE narou_works (
     narou_id BIGINT UNIQUE NOT NULL,
     work_type INT NOT NULL,
     genre_id INT NOT NULL,
+    first_posted_at TIMESTAMP(0) WITH TIME ZONE NOT NULL,
     CONSTRAINT fk_narou_work FOREIGN KEY (work_id) REFERENCES works(work_id) ON UPDATE RESTRICT ON DELETE CASCADE
 );
 
