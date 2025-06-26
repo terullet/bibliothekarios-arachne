@@ -87,6 +87,7 @@ RESOURCE(narou_works, "NarouWork") {
     * narou_id : BIGINT <<UNIQUE>>
     * work_type : INT
     * genre_id : INT
+    * first_posted_at : TIMESTAMP(0) WITH TIME ZONE
 }
 FK(narou_works, works)
 

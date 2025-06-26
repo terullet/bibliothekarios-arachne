@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<SplitPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           stylesheets="@../style.css"
+           prefHeight="400.0" prefWidth="600.0">
+
+    <BorderPane>
+        <top>
+            <BorderPane>
+                <right>
+                    <!-- add work button -->
+                    <Button fx:id="exploreWorkButton" text="&#xff0b;" />
+                </right>
+                <center>
+                    <Label text="小説一覧" alignment="BASELINE_CENTER" />
+                </center>
+            </BorderPane>
+        </top>
+
+        <center>
+            <StackPane>
+                <!-- list of works -->
+                <ListView fx:id="workListView" />
+
+                <Label fx:id="workListEmptyLabel" styleClass="prompt-label" text="&#xff0b;ボタンから作品を追加してください" alignment="CENTER" textAlignment="CENTER" wrapText="true" />
+            </StackPane>
+        </center>
+    </BorderPane>
+
+    <BorderPane>
+        <bottom>
+            <!-- navigation / open, etc. -->
+        </bottom>
+
+        <center>
+            <StackPane>
+                <!-- detail information -->
+                <fx:include source="WorkDetailView.fxml" />
+
+                <Label fx:id="workDetailEmptyLabel" styleClass="prompt-label" text="作品を選択すると詳細が表示されます" alignment="CENTER" textAlignment="CENTER" wrapText="true" />
+            </StackPane>
+        </center>
+    </BorderPane>
+
+</SplitPane>
