@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class NarouWorkService {
@@ -40,26 +41,20 @@ public class NarouWorkService {
 		logger.debug("Creating Narou work: ncode={}, narouId={}", 
 				request.ncode(), request.narouId());
 
-		try (SqlSession session = this.sqlSessionFactory.openSession(false)) {
-			try {
-				int changed;
-				WorkMapper wm = session.getMapper(WorkMapper.class);
-				WorkCreationRequestEntity wcr = request.toWorkCreationRequestEntity();
-				changed = wm.insertWork(wcr);
-				if (changed == 0) {
-					throw new NarouWorkCreationException("Failed to create Narou Work: " + request.ncode());
-				}
-				NarouWorkMapper nwm = session.getMapper(NarouWorkMapper.class);
-				changed = nwm.insertNarouWork(request.toNarouWorkCreationRequestEntity(wcr.getId()));
-				if (changed == 0) {
-					throw new NarouWorkCreationException("Failed to create Narou Work: " + request.ncode());
-				}
-				session.commit();
-			} catch (RuntimeException e) {
-				session.rollback();
-				throw e;
+		this.executeWithTransaction(session -> {
+			int changed;
+			WorkMapper wm = session.getMapper(WorkMapper.class);
+			WorkCreationRequestEntity wcr = request.toWorkCreationRequestEntity();
+			changed = wm.insertWork(wcr);
+			if (changed == 0) {
+				throw new NarouWorkCreationException("Failed to create Narou Work: " + request.ncode());
 			}
-		}
+			NarouWorkMapper nwm = session.getMapper(NarouWorkMapper.class);
+			changed = nwm.insertNarouWork(request.toNarouWorkCreationRequestEntity(wcr.getId()));
+			if (changed == 0) {
+				throw new NarouWorkCreationException("Failed to create Narou Work: " + request.ncode());
+			}
+		});
 	}
 
 	/**
@@ -69,12 +64,12 @@ public class NarouWorkService {
 		logger.debug("Updating Narou work: workId={}, genre={}", 
 				request.getId(), request.getGenre());
 
-		executeWithTransaction(mapper -> {
+		executeWithTransaction(session -> {
+			NarouWorkMapper mapper = session.getMapper(NarouWorkMapper.class);
 			int updated = mapper.updateNarouWork(request);
 			if (updated == 0) {
 				throw new NarouWorkUpdateException("Failed to update Narou work: " + request.getId());
 			}
-			return null;
 		});
 	}
 
@@ -84,14 +79,14 @@ public class NarouWorkService {
 	public void performBulkUpdate(List<NarouWorkUpdateRequestEntity> updates) {
 		logger.debug("Performing bulk update for {} Narou works", updates.size());
 
-		executeWithTransaction(mapper -> {
+		executeWithTransaction(session -> {
+			NarouWorkMapper mapper = session.getMapper(NarouWorkMapper.class);
 			for (var update : updates) {
 				int updated = mapper.updateNarouWork(update);
 				if (updated == 0) {
 					throw new NarouWorkUpdateException("Failed to update Narou work: " + update.getId());
 				}
 			}
-			return null;
 		});
 	}
 
@@ -101,14 +96,14 @@ public class NarouWorkService {
 	public void performBulkCreation(List<NarouWorkCreationRequestEntity> creations) {
 		logger.debug("Performing bulk creation for {} Narou works", creations.size());
 
-		executeWithTransaction(mapper -> {
+		executeWithTransaction(session -> {
+			NarouWorkMapper mapper = session.getMapper(NarouWorkMapper.class);
 			for (var creation : creations) {
 				int inserted = mapper.insertNarouWork(creation);
 				if (inserted == 0) {
 					throw new NarouWorkCreationException("Failed to create Narou work: " + creation.getNcode());
 				}
 			}
-			return null;
 		});
 	}
 
@@ -130,20 +125,18 @@ public class NarouWorkService {
 	/**
 	 * トランザクション付き操作の実行
 	 */
-	private <T> T executeWithTransaction(Function<NarouWorkMapper, T> operation) {
-		try (SqlSession session = sqlSessionFactory.openSession(false)) { // autoCommit=false
-			NarouWorkMapper mapper = session.getMapper(NarouWorkMapper.class);
+	private void executeWithTransaction(Consumer<SqlSession> operation) {
+		try (SqlSession session = this.sqlSessionFactory.openSession(false)) {
 			try {
-				T result = operation.apply(mapper);
+				operation.accept(session);
 				session.commit();
-				return result;
 			} catch (Exception e) {
 				session.rollback();
 				throw e;
 			}
 		} catch (Exception e) {
 			logger.error("Transaction failed", e);
-			throw new ServiceException("Transaction failed", e);
+			throw e;
 		}
 	}
 
