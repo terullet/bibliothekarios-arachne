@@ -1,10 +1,10 @@
 package net.terullet.bibliothekarios.arachne.repository.entity.web;
 
-public final class EpisodeOrderUpdateRequest {
+public final class EpisodeOrderUpdateRequestEntity {
 	private final long id;
 	private final long newOrderNumber;
 
-	public EpisodeOrderUpdateRequest(long id, long newOrderNumber) {
+	public EpisodeOrderUpdateRequestEntity(long id, long newOrderNumber) {
 		this.id = id;
 		this.newOrderNumber = newOrderNumber;
 	}
