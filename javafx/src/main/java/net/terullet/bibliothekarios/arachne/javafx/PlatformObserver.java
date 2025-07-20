@@ -2,8 +2,8 @@ package net.terullet.bibliothekarios.arachne.javafx;
 
 import javafx.application.Platform;
 import javafx.beans.property.Property;
-import net.terullet.util.concurrent.ObservableList;
-import net.terullet.util.concurrent.Observer;
+import net.terullet.bibliothekarios.arachne.core.presentation.ObservableList;
+import net.terullet.bibliothekarios.arachne.core.presentation.Observer;
 
 import java.util.function.Function;
 

@@ -1,5 +1,7 @@
 package net.terullet.util.concurrent;
 
+import net.terullet.bibliothekarios.arachne.core.presentation.ObservableArrayList;
+import net.terullet.bibliothekarios.arachne.core.presentation.ObservableList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -10,7 +12,6 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.*;

@@ -1,4 +1,4 @@
-package net.terullet.util.concurrent;
+package net.terullet.bibliothekarios.arachne.core.presentation;
 
 public interface Observable<T> {
 	T get();
