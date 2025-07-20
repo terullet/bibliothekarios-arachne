@@ -1,5 +1,7 @@
 package net.terullet.util.concurrent;
 
+import net.terullet.bibliothekarios.arachne.core.presentation.Observer;
+import net.terullet.bibliothekarios.arachne.core.presentation.SimpleObservable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;

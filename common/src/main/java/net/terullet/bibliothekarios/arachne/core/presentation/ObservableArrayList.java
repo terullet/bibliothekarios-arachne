@@ -1,4 +1,4 @@
-package net.terullet.util.concurrent;
+package net.terullet.bibliothekarios.arachne.core.presentation;
 
 import java.util.*;
 import java.util.function.Consumer;

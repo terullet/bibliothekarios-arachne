@@ -1,4 +1,6 @@
-package net.terullet.bibliothekarios.arachne.domain;
+package net.terullet.bibliothekarios.arachne.hyperlink.domain.model;
+
+import net.terullet.bibliothekarios.arachne.core.domain.LongIdentifier;
 
 public final class HyperlinkId extends LongIdentifier implements Comparable<HyperlinkId> {
 	public HyperlinkId(long value) {

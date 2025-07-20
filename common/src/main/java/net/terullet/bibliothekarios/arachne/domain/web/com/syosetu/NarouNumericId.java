@@ -1,6 +1,6 @@
 package net.terullet.bibliothekarios.arachne.domain.web.com.syosetu;
 
-import net.terullet.bibliothekarios.arachne.domain.LongIdentifier;
+import net.terullet.bibliothekarios.arachne.core.domain.LongIdentifier;
 
 public final class NarouNumericId extends LongIdentifier implements Comparable<NarouNumericId> {
 	public NarouNumericId(long value) {

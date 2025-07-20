@@ -1,4 +1,4 @@
-package net.terullet.bibliothekarios.arachne.domain;
+package net.terullet.bibliothekarios.arachne.core.domain;
 
 public abstract class IntegerIdentifier {
 	private final int value;

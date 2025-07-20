@@ -1,4 +1,6 @@
-package net.terullet.bibliothekarios.arachne.domain;
+package net.terullet.bibliothekarios.arachne.contribution.domain.model;
+
+import net.terullet.bibliothekarios.arachne.core.domain.LongIdentifier;
 
 public final class ContributorId extends LongIdentifier implements Comparable<ContributorId> {
 	public ContributorId(long value) {

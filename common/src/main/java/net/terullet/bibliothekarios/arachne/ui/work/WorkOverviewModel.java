@@ -1,9 +1,9 @@
 package net.terullet.bibliothekarios.arachne.ui.work;
 
 import net.terullet.bibliothekarios.arachne.service.WorkOverview;
-import net.terullet.util.concurrent.Observable;
-import net.terullet.util.concurrent.SimpleObservable;
-import net.terullet.util.concurrent.WritableObservable;
+import net.terullet.bibliothekarios.arachne.core.presentation.Observable;
+import net.terullet.bibliothekarios.arachne.core.presentation.SimpleObservable;
+import net.terullet.bibliothekarios.arachne.core.presentation.WritableObservable;
 
 public class WorkOverviewModel {
 	private final long id;

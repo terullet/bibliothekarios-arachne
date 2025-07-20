@@ -1,6 +1,6 @@
-package net.terullet.bibliothekarios.arachne.domain.web;
+package net.terullet.bibliothekarios.arachne.content.domain.model;
 
-import net.terullet.bibliothekarios.arachne.domain.LongIdentifier;
+import net.terullet.bibliothekarios.arachne.core.domain.LongIdentifier;
 
 public final class EpisodeId extends LongIdentifier implements Comparable<EpisodeId> {
 	public EpisodeId(long value) {

@@ -1,4 +1,6 @@
-package net.terullet.bibliothekarios.arachne.domain;
+package net.terullet.bibliothekarios.arachne.work.domain.model;
+
+import net.terullet.bibliothekarios.arachne.core.domain.LongIdentifier;
 
 public final class WorkId extends LongIdentifier implements Comparable<WorkId> {
 	public WorkId(long value) {

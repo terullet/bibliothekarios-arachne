@@ -1,4 +1,6 @@
-package net.terullet.bibliothekarios.arachne.domain;
+package net.terullet.bibliothekarios.arachne.work.domain.model;
+
+import net.terullet.bibliothekarios.arachne.core.domain.LongIdentifier;
 
 public final class UniverseId extends LongIdentifier implements Comparable<UniverseId> {
 	public UniverseId(long value) {
